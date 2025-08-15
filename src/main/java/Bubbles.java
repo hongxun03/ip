@@ -14,7 +14,7 @@ public class Bubbles {
     }
 
     public void greetings() {
-        System.out.println(LINE + "\n\tHello! I'm " + name + " \uD83E\uDEE7\uD83E\uDEE7");
+        System.out.println(LINE + "\n\tHello! I'm " + name);
         System.out.println("\tWhat can I do for you?\n" + LINE);
     }
 
