@@ -38,34 +38,61 @@ public class Bubbles {
                     listTasks();
                     break;
                 case "mark":
-                    markTask(command, Integer.parseInt(arg));
+                    markTask(arg);
                     break;
                 case "unmark":
-                    unMarkTask(command, Integer.parseInt(arg));
+                    unMarkTask(arg);
                     break;
                 case "bye":
                     bye();
                     return;
                 default:
-                    addTask(command, arg);
+                    try {
+                        addTask(command, arg);
+                    } catch (TaskException todoE) {
+                        System.out.println(LINE + "\n" + todoE.toString() + "\n" + LINE);
+                    }
+
             }
         }
     }
 
-    public void addTask(String command, String arg) {
+    public void addTask(String command, String arg) throws TaskException{
         switch (command) {
             case "todo":
+                if (arg.isEmpty()) {
+                    throw new TaskException("Enter the description of the todo.");
+                }
                 taskList.add(new ToDo(arg));
                 break;
             case "deadline":
+                if (arg.isEmpty()) {
+                    throw new TaskException("Enter the description of the deadline.");
+                }
                 String[] split1 = arg.split("/by ");
+                if (split1.length == 1) {
+                    throw new TaskException("Enter the time of the deadline. For example, deadline study /by Sunday");
+                }
                 taskList.add(new Deadline(split1[0], split1[1]));
                 break;
             case "event":
+                if (arg.isEmpty()) {
+                    throw new TaskException("Enter the description of the event.");
+                }
                 String[] fromSplit = arg.split("/from ");
+                if (fromSplit.length == 1) {
+                    throw new TaskException(
+                            "Enter the start time of the event. For example, event meeting /from Monday 1pm /to 2pm");
+                }
                 String[] bySplit = fromSplit[1].split("/to ");
+                if (bySplit.length == 1) {
+                    throw new TaskException(
+                            "Enter the end time of the event. For example, event meeting /from Monday 1pm /to 2pm");
+                }
                 taskList.add(new Event(fromSplit[0], bySplit[0], bySplit[1]));
                 break;
+            default:
+                throw new TaskException("I don't understand that command.");
         }
         int listSize = taskList.size();
         System.out.println(LINE + "\n\t Got it. I've added this task:");
@@ -83,17 +110,39 @@ public class Bubbles {
         System.out.println(LINE);
     }
 
-    public void markTask(String command, int arg) {
-        taskList.get(arg - 1).setCompleted();
+    public void markTask(String arg) {
         System.out.println(LINE);
-        System.out.println("\t Nice! I've marked this task as done:\n\t\t" + taskList.get(arg - 1).toString());
+        try {
+            Task task = taskList.get(Integer.parseInt(arg) - 1);
+            task.setCompleted();
+            System.out.println("\t Nice! I've marked this task as done:\n\t\t" + task.toString());
+        } catch (NumberFormatException e) {
+            System.out.println("\tWhoops! Indicate the task number to mark as completed. For example, mark 2.");
+        } catch (IndexOutOfBoundsException e) {
+            if (taskList.isEmpty()) {
+                System.out.println("Whoops! You need to add a task first.");
+            } else {
+                System.out.println("\tWhoops! Enter a number between 1 and " + taskList.size() + ".");
+            }
+        }
         System.out.println(LINE);
     }
 
-    public void unMarkTask(String command, int arg) {
-        taskList.get(arg - 1).unComplete();
+    public void unMarkTask(String arg) {
         System.out.println(LINE);
-        System.out.println("\t OK, I've marked this task as not done yet:\n\t\t" + taskList.get(arg - 1).toString());
+        try {
+            Task task = taskList.get(Integer.parseInt(arg) - 1);
+            task.unComplete();
+            System.out.println("\t OK, I've marked this task as not done yet:\n\t\t" + task.toString());
+        } catch (NumberFormatException e) {
+            System.out.println("\tWhoops! Indicate the task number to mark as incomplete. For example, unmark 2");
+        } catch (IndexOutOfBoundsException e) {
+            if (taskList.isEmpty()) {
+                System.out.println("Whoops! You need to add a task first.");
+            } else {
+                System.out.println("\tWhoops! Enter a number between 1 and " + taskList.size() + ".");
+            }
+        }
         System.out.println(LINE);
     }
 
