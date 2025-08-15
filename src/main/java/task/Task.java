@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+package task;
 
 public class Task {
     private static final String LINE = "\t____________________________________________________________";
