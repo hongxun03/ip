@@ -1,11 +1,18 @@
 public class Bubbles {
-    public static void main(String[] args) {
-        String line = "____________________________________________________________";
-        String name = "Bubbles";
-        System.out.println(line + "\nHello! I'm " + name);
-        System.out.println("What can I do for you?");
-        System.out.println(line);
-        System.out.println("Bye. Hope to see you again soon!\n" + line);
+    public static String line = "\t____________________________________________________________";
+    public static String name = "Bubbles";
 
+    public static void Greetings() {
+        System.out.println(line + "\n\tHello! I'm " + name);
+        System.out.println("\tWhat can I do for you?\n" + line);
+    }
+
+    public static void Bye() {
+        System.out.println("\tBye. Hope to see you again soon!\n" + line);
+    }
+
+    public static void main(String[] args) {
+        Greetings();
+        Bye();
     }
 }
