@@ -1,9 +1,20 @@
+mark -3
 todo borrow book
+todo
 deadline return book /by Sunday
+deadline
+deadline join CCA
+event
+event project meeting
+event project meeting /from Mon
+event project meeting /from Mon 2pm /to
 event project meeting /from Mon 2pm /to 4pm
 list
 mark 1
 mark 2
+mark 5
 unmark 1
+unmark
+unmark -1
 list
 bye
