@@ -117,10 +117,10 @@ public class Bubbles {
             task.setCompleted();
             System.out.println("\t Nice! I've marked this task as done:\n\t\t" + task.toString());
         } catch (NumberFormatException e) {
-            System.out.println("\tWhoops! Indicate the task number to mark as completed. For example, mark 2.");
+            System.out.println("\tWhoops! Indicate the task number to be marked as completed. For example, mark 2.");
         } catch (IndexOutOfBoundsException e) {
             if (taskList.isEmpty()) {
-                System.out.println("Whoops! You need to add a task first.");
+                System.out.println("\tWhoops! You need to add a task first.");
             } else {
                 System.out.println("\tWhoops! Enter a number between 1 and " + taskList.size() + ".");
             }
@@ -135,10 +135,10 @@ public class Bubbles {
             task.unComplete();
             System.out.println("\t OK, I've marked this task as not done yet:\n\t\t" + task.toString());
         } catch (NumberFormatException e) {
-            System.out.println("\tWhoops! Indicate the task number to mark as incomplete. For example, unmark 2");
+            System.out.println("\tWhoops! Indicate the task number to be marked as incomplete. For example, unmark 2.");
         } catch (IndexOutOfBoundsException e) {
             if (taskList.isEmpty()) {
-                System.out.println("Whoops! You need to add a task first.");
+                System.out.println("\tWhoops! You need to add a task first.");
             } else {
                 System.out.println("\tWhoops! Enter a number between 1 and " + taskList.size() + ".");
             }
