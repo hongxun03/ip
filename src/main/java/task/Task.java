@@ -1,9 +1,8 @@
 package task;
 
 public class Task {
-    private static final String LINE = "\t____________________________________________________________";
-    public String taskName;
-    public boolean completed;
+    protected final String taskName;
+    protected boolean completed;
 
     public Task(String taskName) {
         this.taskName  = taskName;
