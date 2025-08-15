@@ -4,10 +4,11 @@ import java.util.Scanner;
 public class Bubbles {
     private static final String LINE = "\t____________________________________________________________";
     private final String name;
-    private ArrayList<String> tasks = new ArrayList<>();
+    private ArrayList<Task> taskList;
 
     public Bubbles(String name) {
         this.name = name;
+        this.taskList = new ArrayList<>();
     }
 
     public void greetings() {
@@ -19,27 +20,46 @@ public class Bubbles {
         System.out.println(LINE + "\n\tBye. Hope to see you again soon!\n" + LINE);
     }
 
-    public void addTask() {
+    public void echo() {
         Scanner scanner = new Scanner(System.in);
         String message;
         while (true) {
             message = scanner.nextLine().trim();
-            if (message.equals("list")) {
-                listTasks();
-            } else if (message.equals("bye")) {
-                scanner.close();
-                break;
-            } else {
-                tasks.add(message);
-                System.out.println(LINE + "\n\t added: " + message + "\n" + LINE);
+            if (message.isEmpty()) continue;
+
+            String[] parts = message.split(" ");
+            String command = parts[0];
+            String arg = (parts.length > 1) ? parts[1] : "";
+
+            switch (command) {
+                case "list":
+                    listTasks();
+                    break;
+                case "mark":
+                    taskList.get(Integer.parseInt(arg) - 1).setCompleted();
+                    break;
+                case "unmark":
+                    taskList.get(Integer.parseInt(arg) - 1).unComplete();
+                    break;
+                case "bye":
+                    bye();
+                    return;
+                default:
+                    addTask(message);
             }
         }
     }
 
+    public void addTask(String message) {
+        taskList.add(new Task(message));
+        System.out.println(LINE + "\n\t added: " + message + "\n" + LINE);
+    }
+
     public void listTasks() {
         System.out.println(LINE);
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println("\t" + (i + 1) + ". " + tasks.get(i));
+        System.out.println("\t Here are the tasks in your list:");
+        for (int i = 0; i < taskList.size(); i++) {
+            System.out.println("\t " + (i + 1) + ". " + taskList.get(i).toString());
         }
         System.out.println(LINE);
     }
@@ -47,7 +67,6 @@ public class Bubbles {
     public static void main(String[] args) {
         Bubbles bubbles = new Bubbles("Bubbles");
         bubbles.greetings();
-        bubbles.addTask();
-        bubbles.bye();
+        bubbles.echo();
     }
 }
