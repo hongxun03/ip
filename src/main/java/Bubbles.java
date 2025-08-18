@@ -46,6 +46,9 @@ public class Bubbles {
                 case "bye":
                     bye();
                     return;
+                case "delete":
+                    deleteTask(arg);
+                    break;
                 default:
                     try {
                         addTask(command, arg);
@@ -136,6 +139,27 @@ public class Bubbles {
             System.out.println("\t OK, I've marked this task as not done yet:\n\t\t" + task.toString());
         } catch (NumberFormatException e) {
             System.out.println("\tWhoops! Indicate the task number to be marked as incomplete. For example, unmark 2.");
+        } catch (IndexOutOfBoundsException e) {
+            if (taskList.isEmpty()) {
+                System.out.println("\tWhoops! You need to add a task first.");
+            } else {
+                System.out.println("\tWhoops! Enter a number between 1 and " + taskList.size() + ".");
+            }
+        }
+        System.out.println(LINE);
+    }
+
+    public void deleteTask(String arg) {
+        System.out.println(LINE);
+        try {
+            Task task =  taskList.get(Integer.parseInt(arg) - 1);
+            taskList.remove(task);
+            System.out.println("\t Noted. I've deleted this task from your list:\n\t\t" + task.toString());
+            int listSize = taskList.size();
+            System.out.println("\t Now you have " + listSize + (listSize == 1 ? " task" : " tasks")
+                    + " remaining.");
+        } catch (NumberFormatException e) {
+            System.out.println("\tWhoops! Indicate the task number to be deleted. For example, delete 2.");
         } catch (IndexOutOfBoundsException e) {
             if (taskList.isEmpty()) {
                 System.out.println("\tWhoops! You need to add a task first.");
