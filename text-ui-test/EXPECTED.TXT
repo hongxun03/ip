@@ -6,6 +6,12 @@
 	Whoops! You need to add a task first.
 	____________________________________________________________
 	____________________________________________________________
+	Whoops! Indicate the task number to be deleted. For example, delete 2.
+	____________________________________________________________
+	____________________________________________________________
+	Whoops! You need to add a task first.
+	____________________________________________________________
+	____________________________________________________________
 	 Got it. I've added this task:
 		[T][ ] borrow book
 	 Now you have 1 task in the list.
@@ -69,10 +75,21 @@
 	Whoops! Enter a number between 1 and 3.
 	____________________________________________________________
 	____________________________________________________________
+	 Noted. I've deleted this task from your list:
+		[T][ ] borrow book
+	 Now you have 2 tasks remaining.
+	____________________________________________________________
+	____________________________________________________________
+	Whoops! Enter a number between 1 and 2.
+	____________________________________________________________
+	____________________________________________________________
+	 Noted. I've deleted this task from your list:
+     		[E][ ] project meeting (from: Mon 2pm to: 4pm)
+     	 Now you have 1 task remaining.
+	____________________________________________________________
+	____________________________________________________________
 	 Here are the tasks in your list:
-	 1. [T][ ] borrow book
-	 2. [D][X] return book (by: Sunday)
-	 3. [E][ ] project meeting (from: Mon 2pm to: 4pm)
+	 1. [D][X] return book (by: Sunday)
 	____________________________________________________________
 	____________________________________________________________
 	Bye. Hope to see you again soon!
