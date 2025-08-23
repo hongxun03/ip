@@ -11,7 +11,14 @@ public class Event extends Task {
     }
 
     @Override
+    public String saveString() {
+        return "E | " + (this.isCompleted ? "✓" : "X")
+                + " | " + this.taskName
+                + " | " + this.fromDate + " - " + this.dueDate;
+    }
+
+    @Override
     public String toString() {
-        return "[E]" + super.toString() + "(from: " + this.fromDate + "to: " + this.dueDate + ")";
+        return "[E]" + super.toString() + " (from: " + this.fromDate + " to: " + this.dueDate + ")";
     }
 }

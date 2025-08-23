@@ -1,23 +1,25 @@
 package task;
 
-public class Task {
+public abstract class Task {
     protected final String taskName;
-    protected boolean completed;
+    protected boolean isCompleted;
 
     public Task(String taskName) {
         this.taskName  = taskName;
-        this.completed = false;
+        this.isCompleted = false;
     }
 
     public void setCompleted() {
-        this.completed = true;
+        this.isCompleted = true;
     }
 
     public void unComplete() {
-        this.completed = false;
+        this.isCompleted = false;
     }
 
+    public abstract String saveString();
+
     public String toString() {
-        return (this.completed ? "[X]" : "[ ]") + " " + this.taskName;
+        return (this.isCompleted ? "[✓]" : "[X]") + " " + this.taskName;
     }
 }

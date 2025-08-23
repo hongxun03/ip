@@ -7,6 +7,12 @@ public class ToDo extends Task {
     }
 
     @Override
+    public String saveString() {
+        return "T | " + (this.isCompleted ? "✓" : "X")
+                + " | " + this.taskName;
+    }
+
+    @Override
     public String toString() {
         return "[T]" + super.toString();
     }
