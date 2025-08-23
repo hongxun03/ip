@@ -34,28 +34,27 @@ public class Bubbles {
             String arg = (parts.length > 1) ? parts[1] : "";
 
             switch (command) {
-                case "list":
-                    listTasks();
-                    break;
-                case "mark":
-                    markTask(arg);
-                    break;
-                case "unmark":
-                    unMarkTask(arg);
-                    break;
-                case "bye":
-                    bye();
-                    return;
-                case "delete":
-                    deleteTask(arg);
-                    break;
-                default:
-                    try {
-                        addTask(command, arg);
-                    } catch (TaskException todoE) {
-                        System.out.println(LINE + "\n" + todoE.toString() + "\n" + LINE);
-                    }
-
+            case "list":
+                listTasks();
+                break;
+            case "mark":
+                markTask(arg);
+                break;
+            case "unmark":
+                unMarkTask(arg);
+                break;
+            case "bye":
+                bye();
+                return;
+            case "delete":
+                deleteTask(arg);
+                break;
+            default:
+                try {
+                    addTask(command, arg);
+                } catch (TaskException todoE) {
+                    System.out.println(LINE + "\n" + todoE.toString() + "\n" + LINE);
+                }
             }
         }
     }
