@@ -9,7 +9,13 @@ public class Deadline extends Task {
     }
 
     @Override
+    public String saveString() {
+        return "D | " + (this.isCompleted ? "✓" : "X")
+                + " | " + this.taskName + " | " + this.dueDate;
+    }
+
+    @Override
     public String toString() {
-        return "[D]" + super.toString() + "(by: " + this.dueDate + ")";
+        return "[D]" + super.toString() + " (by: " + this.dueDate + ")";
     }
 }

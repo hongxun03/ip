@@ -1,0 +1,3 @@
+T | X | drink
+D | X | homework | 2pm
+E | X | meeting | 2pm - 4pm
