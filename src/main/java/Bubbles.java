@@ -7,10 +7,12 @@ public class Bubbles {
     private static final String LINE = "\t____________________________________________________________";
     private final String name;
     private ArrayList<Task> taskList;
+    private Storage storage;
 
     public Bubbles(String name) {
         this.name = name;
-        this.taskList = new ArrayList<>();
+        storage = new Storage("./data/Bubbles.txt");
+        taskList = storage.load();
     }
 
     public void greetings() {
@@ -71,7 +73,7 @@ public class Bubbles {
                 if (arg.isEmpty()) {
                     throw new TaskException("Enter the description of the deadline.");
                 }
-                String[] split1 = arg.split("/by ");
+                String[] split1 = arg.split(" /by ");
                 if (split1.length == 1) {
                     throw new TaskException("Enter the time of the deadline. For example, deadline study /by Sunday");
                 }
@@ -81,12 +83,12 @@ public class Bubbles {
                 if (arg.isEmpty()) {
                     throw new TaskException("Enter the description of the event.");
                 }
-                String[] fromSplit = arg.split("/from ");
+                String[] fromSplit = arg.split(" /from ");
                 if (fromSplit.length == 1) {
                     throw new TaskException(
                             "Enter the start time of the event. For example, event meeting /from Monday 1pm /to 2pm");
                 }
-                String[] bySplit = fromSplit[1].split("/to ");
+                String[] bySplit = fromSplit[1].split(" /to ");
                 if (bySplit.length == 1) {
                     throw new TaskException(
                             "Enter the end time of the event. For example, event meeting /from Monday 1pm /to 2pm");
@@ -96,6 +98,7 @@ public class Bubbles {
             default:
                 throw new TaskException("I don't understand that command.");
         }
+        storage.save(taskList);
         int listSize = taskList.size();
         System.out.println(LINE + "\n\t Got it. I've added this task:");
         System.out.println("\t\t" + taskList.get(listSize - 1).toString());
@@ -117,6 +120,7 @@ public class Bubbles {
         try {
             Task task = taskList.get(Integer.parseInt(arg) - 1);
             task.setCompleted();
+            storage.save(taskList);
             System.out.println("\t Nice! I've marked this task as done:\n\t\t" + task.toString());
         } catch (NumberFormatException e) {
             System.out.println("\tWhoops! Indicate the task number to be marked as completed. For example, mark 2.");
@@ -135,6 +139,7 @@ public class Bubbles {
         try {
             Task task = taskList.get(Integer.parseInt(arg) - 1);
             task.unComplete();
+            storage.save(taskList);
             System.out.println("\t OK, I've marked this task as not done yet:\n\t\t" + task.toString());
         } catch (NumberFormatException e) {
             System.out.println("\tWhoops! Indicate the task number to be marked as incomplete. For example, unmark 2.");
@@ -153,6 +158,7 @@ public class Bubbles {
         try {
             Task task =  taskList.get(Integer.parseInt(arg) - 1);
             taskList.remove(task);
+            storage.save(taskList);
             System.out.println("\t Noted. I've deleted this task from your list:\n\t\t" + task.toString());
             int listSize = taskList.size();
             System.out.println("\t Now you have " + listSize + (listSize == 1 ? " task" : " tasks")
@@ -172,6 +178,7 @@ public class Bubbles {
     public static void main(String[] args) {
         Bubbles bubbles = new Bubbles("Bubbles");
         bubbles.greetings();
+        bubbles.listTasks();
         bubbles.echo();
     }
 }
