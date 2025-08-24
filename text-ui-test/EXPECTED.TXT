@@ -1,95 +1,99 @@
 	____________________________________________________________
 	Hello! I'm Bubbles
+	____________________________________________________________
+	 Here are the tasks in your list:
+	____________________________________________________________
 	What can I do for you?
 	____________________________________________________________
 	____________________________________________________________
-	Whoops! You need to add a task first.
+	 Whoops! You need to add a task first.
 	____________________________________________________________
 	____________________________________________________________
-	Whoops! Indicate the task number to be deleted. For example, delete 2.
-	____________________________________________________________
-	____________________________________________________________
-	Whoops! You need to add a task first.
+	 Whoops! You need to add a task first.
 	____________________________________________________________
 	____________________________________________________________
 	 Got it. I've added this task:
-		[T][ ] borrow book
+		[T][X] borrow book
 	 Now you have 1 task in the list.
 	____________________________________________________________
 	____________________________________________________________
-	Oops! Enter the description of the todo.
+	 Oops! Enter the description of the todo.
 	____________________________________________________________
 	____________________________________________________________
 	 Got it. I've added this task:
-		[D][ ] return book (by: Sunday)
+		[D][X] return book (5 Aug 3:00pm)
 	 Now you have 2 tasks in the list.
 	____________________________________________________________
 	____________________________________________________________
-	Oops! Enter the description of the deadline.
+	 Oops! Enter the description of the deadline.
 	____________________________________________________________
 	____________________________________________________________
-	Oops! Enter the time of the deadline. For example, deadline study /by Sunday
+	 Oops! Enter the time of the deadline. Usage: deadline study /by 03/08 1800
 	____________________________________________________________
 	____________________________________________________________
-	Oops! Enter the description of the event.
+	 Oops! Enter the description of the event.
 	____________________________________________________________
 	____________________________________________________________
-	Oops! Enter the start time of the event. For example, event meeting /from Monday 1pm /to 2pm
+	 Oops! Enter the start time of the event. Usage: event meeting /from 03/08 1300 /to 03/08 1400
 	____________________________________________________________
 	____________________________________________________________
-	Oops! Enter the end time of the event. For example, event meeting /from Monday 1pm /to 2pm
+	 Oops! Enter the end time of the event. Usage: event meeting /from 03/08 1300 /to 03/08 1400
 	____________________________________________________________
 	____________________________________________________________
-	Oops! Enter the end time of the event. For example, event meeting /from Monday 1pm /to 2pm
+	 Enter a valid date and time, format: DD/MM HHMM
 	____________________________________________________________
 	____________________________________________________________
 	 Got it. I've added this task:
-		[E][ ] project meeting (from: Mon 2pm to: 4pm)
+		[E][X] project meeting (6 Aug 12:00pm - 6 Aug 1:00pm)
 	 Now you have 3 tasks in the list.
 	____________________________________________________________
 	____________________________________________________________
 	 Here are the tasks in your list:
-	 1. [T][ ] borrow book
-	 2. [D][ ] return book (by: Sunday)
-	 3. [E][ ] project meeting (from: Mon 2pm to: 4pm)
+	 1. [T][X] borrow book
+	 2. [D][X] return book (5 Aug 3:00pm)
+	 3. [E][X] project meeting (6 Aug 12:00pm - 6 Aug 1:00pm)
 	____________________________________________________________
 	____________________________________________________________
 	 Nice! I've marked this task as done:
-		[T][X] borrow book
+		[T][✓] borrow book
 	____________________________________________________________
 	____________________________________________________________
 	 Nice! I've marked this task as done:
-		[D][X] return book (by: Sunday)
+		[D][✓] return book (5 Aug 3:00pm)
 	____________________________________________________________
 	____________________________________________________________
-	Whoops! Enter a number between 1 and 3.
+	 Whoops! Enter a number between 1 and 3.
 	____________________________________________________________
 	____________________________________________________________
 	 OK, I've marked this task as not done yet:
-		[T][ ] borrow book
+		[T][X] borrow book
 	____________________________________________________________
 	____________________________________________________________
-	Whoops! Indicate the task number to be marked as incomplete. For example, unmark 2.
+	 Whoops! Indicate the task number. For example, mark 2.
 	____________________________________________________________
 	____________________________________________________________
-	Whoops! Enter a number between 1 and 3.
+	 Whoops! Enter a number between 1 and 3.
 	____________________________________________________________
 	____________________________________________________________
 	 Noted. I've deleted this task from your list:
-		[T][ ] borrow book
+		[T][X] borrow book
 	 Now you have 2 tasks remaining.
 	____________________________________________________________
 	____________________________________________________________
-	Whoops! Enter a number between 1 and 2.
+	 Whoops! Enter a number between 1 and 2.
 	____________________________________________________________
 	____________________________________________________________
 	 Noted. I've deleted this task from your list:
-     		[E][ ] project meeting (from: Mon 2pm to: 4pm)
-     	 Now you have 1 task remaining.
+		[E][X] project meeting (6 Aug 12:00pm - 6 Aug 1:00pm)
+	 Now you have 1 task remaining.
+	____________________________________________________________
+	____________________________________________________________
+	 Noted. I've deleted this task from your list:
+		[D][✓] return book (5 Aug 3:00pm)
+	 Now you have 0 tasks remaining.
 	____________________________________________________________
 	____________________________________________________________
 	 Here are the tasks in your list:
-	 1. [D][X] return book (by: Sunday)
 	____________________________________________________________
 	____________________________________________________________
 	Bye. Hope to see you again soon!

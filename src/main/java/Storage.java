@@ -2,7 +2,6 @@ import task.*;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Storage {
@@ -33,6 +32,8 @@ public class Storage {
                 }
             } catch (IOException e) {
                 System.out.println("Error loading file: " + e.getMessage());
+            } catch (TaskException e) {
+                System.out.println(e.getMessage());
             }
         }
         return tasks;
@@ -49,7 +50,7 @@ public class Storage {
         }
     }
 
-    private Task parseTask(String line) {
+    private Task parseTask(String line) throws TaskException {
         String[] lineSplit = line.split(" \\| ");
         String type = lineSplit[0];
         boolean isCompleted = lineSplit[1].equals("✓");
@@ -57,7 +58,7 @@ public class Storage {
 
         return switch (type) {
             case "T" -> new ToDo(desc);
-            case "D" -> new Deadline(desc, LocalDateTime.parse(lineSplit[3]));
+            case "D" -> new Deadline(desc, Parser.parseDate(lineSplit[3]));
             case "E" -> {
                 String[] dateSplit = lineSplit[3].split(" - ");
                 yield new Event(desc,

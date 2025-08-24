@@ -1,16 +1,15 @@
 mark -3
 delete
-delete 2
 todo borrow book
 todo
-deadline return book /by Sunday
+deadline return book /by 05/08 1500
 deadline
 deadline join CCA
 event
 event project meeting
 event project meeting /from Mon
-event project meeting /from Mon 2pm /to
-event project meeting /from Mon 2pm /to 4pm
+event project meeting /from Mon /to Tues
+event project meeting /from 06/08 1200 /to 06/08 1300
 list
 mark 1
 mark 2
@@ -21,5 +20,6 @@ unmark -1
 delete 1
 delete 5
 delete 2
+delete 1
 list
 bye
