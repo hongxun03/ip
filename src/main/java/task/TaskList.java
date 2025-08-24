@@ -1,7 +1,9 @@
-import task.*;
+package task;
 
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import parser.Parser;
+import storage.Storage;
 
 public class TaskList {
     private static final String LINE = "\t____________________________________________________________";
