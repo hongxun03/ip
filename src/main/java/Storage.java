@@ -1,6 +1,8 @@
 import task.*;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Storage {
@@ -55,10 +57,12 @@ public class Storage {
 
         return switch (type) {
             case "T" -> new ToDo(desc);
-            case "D" -> new Deadline(desc, lineSplit[3]);
+            case "D" -> new Deadline(desc, LocalDateTime.parse(lineSplit[3]));
             case "E" -> {
                 String[] dateSplit = lineSplit[3].split(" - ");
-                yield new Event(desc, dateSplit[0], dateSplit[1]);
+                yield new Event(desc,
+                        LocalDateTime.parse(dateSplit[0]),
+                        LocalDateTime.parse(dateSplit[1]));
             }
             default -> null;
         };

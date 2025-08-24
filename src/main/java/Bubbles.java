@@ -1,5 +1,11 @@
 import task.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -63,40 +69,65 @@ public class Bubbles {
 
     public void addTask(String command, String arg) throws TaskException{
         switch (command) {
-            case "todo":
-                if (arg.isEmpty()) {
-                    throw new TaskException("Enter the description of the todo.");
-                }
-                taskList.add(new ToDo(arg));
+        case "todo":
+            if (arg.isEmpty()) {
+                throw new TaskException("Enter the description of the todo.");
+            }
+            taskList.add(new ToDo(arg));
+            break;
+
+        case "deadline":
+            if (arg.isEmpty()) {
+                throw new TaskException("Enter the description of the deadline.");
+            }
+            String[] split1 = arg.split(" /by ");
+            if (split1.length == 1) {
+                throw new TaskException("Enter the time of the deadline. For example, deadline study /by 03/08 1800");
+            }
+
+            try {
+                DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                        .parseDefaulting(ChronoField.YEAR, LocalDate.now().getYear())
+                        .appendPattern("dd/MM HHmm")
+                        .toFormatter();
+                taskList.add(new Deadline(split1[0], LocalDateTime.parse(split1[1], formatter)));
                 break;
-            case "deadline":
-                if (arg.isEmpty()) {
-                    throw new TaskException("Enter the description of the deadline.");
-                }
-                String[] split1 = arg.split(" /by ");
-                if (split1.length == 1) {
-                    throw new TaskException("Enter the time of the deadline. For example, deadline study /by Sunday");
-                }
-                taskList.add(new Deadline(split1[0], split1[1]));
+            } catch (DateTimeParseException e) {
+                System.out.println("Enter a valid date and time, format: DD/MM HHMM");
+                return;
+            }
+
+        case "event":
+            if (arg.isEmpty()) {
+                throw new TaskException("Enter the description of the event.");
+            }
+            String[] fromSplit = arg.split(" /from ");
+            if (fromSplit.length == 1) {
+                throw new TaskException(
+                        "Enter the start time of the event. Usage: event meeting /from 03/08 1300 /to 03/08 1400");
+            }
+            String[] bySplit = fromSplit[1].split(" /to ");
+            if (bySplit.length == 1) {
+                throw new TaskException(
+                        "Enter the end time of the event. Usage: event meeting /from 03/08 1300 /to 03/08 1400");
+            }
+
+            try {
+                DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                        .parseDefaulting(ChronoField.YEAR, LocalDate.now().getYear())
+                        .appendPattern("dd/MM HHmm")
+                        .toFormatter();
+                taskList.add(new Event(fromSplit[0],
+                        LocalDateTime.parse(bySplit[0], formatter),
+                        LocalDateTime.parse(bySplit[1], formatter)));
                 break;
-            case "event":
-                if (arg.isEmpty()) {
-                    throw new TaskException("Enter the description of the event.");
-                }
-                String[] fromSplit = arg.split(" /from ");
-                if (fromSplit.length == 1) {
-                    throw new TaskException(
-                            "Enter the start time of the event. For example, event meeting /from Monday 1pm /to 2pm");
-                }
-                String[] bySplit = fromSplit[1].split(" /to ");
-                if (bySplit.length == 1) {
-                    throw new TaskException(
-                            "Enter the end time of the event. For example, event meeting /from Monday 1pm /to 2pm");
-                }
-                taskList.add(new Event(fromSplit[0], bySplit[0], bySplit[1]));
-                break;
-            default:
-                throw new TaskException("I don't understand that command.");
+            } catch(DateTimeParseException e) {
+                System.out.println("Enter a valid date and time, format: DD/MM HHMM");
+                return;
+            }
+
+        default:
+            throw new TaskException("I don't understand that command.");
         }
         storage.save(taskList);
         int listSize = taskList.size();
