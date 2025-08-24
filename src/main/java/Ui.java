@@ -26,6 +26,7 @@ public class Ui {
                 continue;
             } else if (message.equalsIgnoreCase("bye")) {
                 bye();
+                scanner.close();
                 break;
             }
 
