@@ -1,21 +1,18 @@
 import task.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 
 public class TaskList {
     private static final String LINE = "\t____________________________________________________________";
     private final ArrayList<Task> tasks;
     private Storage storage;
+    private Parser parser;
 
     public TaskList(ArrayList<Task> tasks, Storage storage) {
         this.tasks = tasks;
         this.storage = storage;
+        this.parser = new Parser();
     }
 
     public void op(String message) {
@@ -60,18 +57,16 @@ public class TaskList {
             }
             String[] split1 = arg.split(" /by ");
             if (split1.length == 1) {
-                throw new TaskException("Enter the time of the deadline. For example, deadline study /by 03/08 1800");
+                throw new TaskException("Enter the time of the deadline. Usage: deadline study /by 03/08 1800");
             }
 
             try {
-                DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-                        .parseDefaulting(ChronoField.YEAR, LocalDate.now().getYear())
-                        .appendPattern("dd/MM HHmm")
-                        .toFormatter();
-                tasks.add(new Deadline(split1[0], LocalDateTime.parse(split1[1], formatter)));
+                tasks.add(new Deadline(split1[0], parser.formatDate(split1[1])));
                 break;
             } catch (DateTimeParseException e) {
-                System.out.println("Enter a valid date and time, format: DD/MM HHMM");
+                System.out.println(LINE);
+                System.out.println("\t Enter a valid date and time, format: DD/MM HHMM");
+                System.out.println(LINE);
                 return;
             }
 
@@ -91,16 +86,14 @@ public class TaskList {
             }
 
             try {
-                DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-                        .parseDefaulting(ChronoField.YEAR, LocalDate.now().getYear())
-                        .appendPattern("dd/MM HHmm")
-                        .toFormatter();
                 tasks.add(new Event(fromSplit[0],
-                        LocalDateTime.parse(bySplit[0], formatter),
-                        LocalDateTime.parse(bySplit[1], formatter)));
+                        parser.formatDate(bySplit[0]),
+                        parser.formatDate(bySplit[1])));
                 break;
             } catch(DateTimeParseException e) {
-                System.out.println("Enter a valid date and time, format: DD/MM HHMM");
+                System.out.println(LINE);
+                System.out.println("\t Enter a valid date and time, format: DD/MM HHMM");
+                System.out.println(LINE);
                 return;
             }
 
@@ -126,60 +119,68 @@ public class TaskList {
 
     public void markTask(String arg) {
         System.out.println(LINE);
+
+        if (tasks.isEmpty()) {
+            System.out.println("\t Whoops! You need to add a task first.");
+            System.out.println(LINE);
+            return;
+        }
+
         try {
-            Task task = tasks.get(Integer.parseInt(arg) - 1);
+            int index = parser.parseTaskIndex(arg, tasks.size());
+            Task task = tasks.get(index);
             task.setCompleted();
             storage.save(tasks);
             System.out.println("\t Nice! I've marked this task as done:\n\t\t" + task.toString());
-        } catch (NumberFormatException e) {
-            System.out.println("\tWhoops! Indicate the task number to be marked as completed. For example, mark 2.");
-        } catch (IndexOutOfBoundsException e) {
-            if (tasks.isEmpty()) {
-                System.out.println("\tWhoops! You need to add a task first.");
-            } else {
-                System.out.println("\tWhoops! Enter a number between 1 and " + tasks.size() + ".");
-            }
+        } catch (TaskException e) {
+            System.out.println("\t Whoops! " + e.getMessage());
         }
         System.out.println(LINE);
     }
 
     public void unMarkTask(String arg) {
         System.out.println(LINE);
+
+        if (tasks.isEmpty()) {
+            System.out.println("\t Whoops! You need to add a task first.");
+            System.out.println(LINE);
+            return;
+        }
+
         try {
-            Task task = tasks.get(Integer.parseInt(arg) - 1);
+            int index = parser.parseTaskIndex(arg, tasks.size());
+            Task task = tasks.get(index);
             task.unComplete();
             storage.save(tasks);
             System.out.println("\t OK, I've marked this task as not done yet:\n\t\t" + task.toString());
-        } catch (NumberFormatException e) {
-            System.out.println("\tWhoops! Indicate the task number to be marked as incomplete. For example, unmark 2.");
-        } catch (IndexOutOfBoundsException e) {
-            if (tasks.isEmpty()) {
-                System.out.println("\tWhoops! You need to add a task first.");
-            } else {
-                System.out.println("\tWhoops! Enter a number between 1 and " + tasks.size() + ".");
-            }
+        } catch (TaskException e) {
+            System.out.println("\t Whoops! " + e.getMessage());
         }
         System.out.println(LINE);
     }
 
     public void deleteTask(String arg) {
         System.out.println(LINE);
+
+        if (tasks.isEmpty()) {
+            System.out.println("\t Whoops! You need to add a task first.");
+            System.out.println(LINE);
+            return;
+        }
+
         try {
-            Task task =  tasks.get(Integer.parseInt(arg) - 1);
+            int size = tasks.size();
+            int index = parser.parseTaskIndex(arg, size);
+            Task task =  tasks.get(index);
             tasks.remove(task);
             storage.save(tasks);
+
+            size = tasks.size();
             System.out.println("\t Noted. I've deleted this task from your list:\n\t\t" + task.toString());
-            int listSize = tasks.size();
-            System.out.println("\t Now you have " + listSize + (listSize == 1 ? " task" : " tasks")
+            System.out.println("\t Now you have " + size + (size == 1 ? " task" : " tasks")
                     + " remaining.");
-        } catch (NumberFormatException e) {
-            System.out.println("\tWhoops! Indicate the task number to be deleted. For example, delete 2.");
-        } catch (IndexOutOfBoundsException e) {
-            if (tasks.isEmpty()) {
-                System.out.println("\tWhoops! You need to add a task first.");
-            } else {
-                System.out.println("\tWhoops! Enter a number between 1 and " + tasks.size() + ".");
-            }
+        } catch (TaskException e) {
+            System.out.println("\t Whoops! " + e.getMessage());
         }
         System.out.println(LINE);
     }
