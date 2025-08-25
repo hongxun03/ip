@@ -31,7 +31,7 @@ test {
 }
 
 application {
-    mainClass.set("Bubbles")
+    mainClass.set("chatbot/Bubbles")
 }
 
 checkstyle {
