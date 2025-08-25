@@ -14,7 +14,6 @@ public class DeadlineTest {
     public void testDeadline_dateToString() {
         LocalDate today = LocalDate.now(ZoneId.of("Asia/Singapore"));
         LocalDate monday = today.with(java.time.temporal.TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        LocalDate sunday = today.with(java.time.temporal.TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
 
         Deadline dToday = new Deadline("due today", LocalDateTime.of(today, LocalTime.of(12, 35)));
         Assertions.assertEquals("12:35pm", dToday.dateToString());
