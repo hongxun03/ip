@@ -9,12 +9,10 @@ public class TaskList {
     private static final String LINE = "\t____________________________________________________________";
     private final ArrayList<Task> tasks;
     private Storage storage;
-    private Parser parser;
 
     public TaskList(ArrayList<Task> tasks, Storage storage) {
         this.tasks = tasks;
         this.storage = storage;
-        this.parser = new Parser();
     }
 
     public void op(String message) {
@@ -63,7 +61,7 @@ public class TaskList {
             }
 
             try {
-                tasks.add(new Deadline(split1[0], parser.formatDate(split1[1])));
+                tasks.add(new Deadline(split1[0], Parser.formatDate(split1[1])));
                 break;
             } catch (DateTimeParseException e) {
                 System.out.println(LINE);
@@ -89,8 +87,8 @@ public class TaskList {
 
             try {
                 tasks.add(new Event(fromSplit[0],
-                        parser.formatDate(bySplit[0]),
-                        parser.formatDate(bySplit[1])));
+                        Parser.formatDate(bySplit[0]),
+                        Parser.formatDate(bySplit[1])));
                 break;
             } catch(DateTimeParseException e) {
                 System.out.println(LINE);
@@ -129,7 +127,7 @@ public class TaskList {
         }
 
         try {
-            int index = parser.parseTaskIndex(arg, tasks.size());
+            int index = Parser.parseTaskIndex(arg, tasks.size());
             Task task = tasks.get(index);
             task.setCompleted();
             storage.save(tasks);
@@ -150,7 +148,7 @@ public class TaskList {
         }
 
         try {
-            int index = parser.parseTaskIndex(arg, tasks.size());
+            int index = Parser.parseTaskIndex(arg, tasks.size());
             Task task = tasks.get(index);
             task.unComplete();
             storage.save(tasks);
@@ -172,7 +170,7 @@ public class TaskList {
 
         try {
             int size = tasks.size();
-            int index = parser.parseTaskIndex(arg, size);
+            int index = Parser.parseTaskIndex(arg, size);
             Task task =  tasks.get(index);
             tasks.remove(task);
             storage.save(tasks);
