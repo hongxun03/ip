@@ -1,4 +1,4 @@
-package task;
+package chatbot.task;
 
 public class ToDo extends Task {
 

@@ -1,4 +1,4 @@
-package task;
+package chatbot.task;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

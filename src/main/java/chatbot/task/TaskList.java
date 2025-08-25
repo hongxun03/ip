@@ -1,9 +1,9 @@
-package task;
+package chatbot.task;
 
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import parser.Parser;
-import storage.Storage;
+import chatbot.parser.Parser;
+import chatbot.storage.Storage;
 
 public class TaskList {
     private static final String LINE = "\t____________________________________________________________";
@@ -106,7 +106,7 @@ public class TaskList {
         int listSize = tasks.size();
         System.out.println(LINE + "\n\t Got it. I've added this task:");
         System.out.println("\t\t" + tasks.get(listSize - 1).toString());
-        System.out.println("\t Now you have " + listSize + (listSize == 1 ? " task" : " tasks")
+        System.out.println("\t Now you have " + listSize + (listSize == 1 ? "chatbot/task" : " tasks")
                 + " in the list.\n" + LINE);
     }
 
@@ -179,7 +179,7 @@ public class TaskList {
 
             size = tasks.size();
             System.out.println("\t Noted. I've deleted this task from your list:\n\t\t" + task.toString());
-            System.out.println("\t Now you have " + size + (size == 1 ? " task" : " tasks")
+            System.out.println("\t Now you have " + size + (size == 1 ? "chatbot/task" : " tasks")
                     + " remaining.");
         } catch (TaskException e) {
             System.out.println("\t Whoops! " + e.getMessage());

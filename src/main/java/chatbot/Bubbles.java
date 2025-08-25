@@ -1,5 +1,7 @@
-import storage.Storage;
-import task.TaskList;
+package chatbot;
+
+import chatbot.storage.Storage;
+import chatbot.task.TaskList;
 
 public class Bubbles {
     private Ui ui;

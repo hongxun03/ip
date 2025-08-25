@@ -1,7 +1,7 @@
-package storage;
+package chatbot.storage;
 
-import parser.Parser;
-import task.*;
+import chatbot.parser.Parser;
+import chatbot.task.*;
 
 import java.io.*;
 import java.time.LocalDateTime;
