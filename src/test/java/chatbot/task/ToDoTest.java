@@ -6,10 +6,18 @@ import org.junit.jupiter.api.Test;
 public class ToDoTest {
 
     @Test
-    public void testToDo_completeAndUnCompleteTask_success() {
+    public void setComplete_success() {
         ToDo todo = new ToDo("read");
 
         Assertions.assertFalse(todo.isCompleted);
+
+        todo.setCompleted();
+        Assertions.assertTrue(todo.isCompleted);
+    }
+
+    @Test
+    public void unComplete_success() {
+        ToDo todo = new ToDo("read");
 
         todo.setCompleted();
         Assertions.assertTrue(todo.isCompleted);
@@ -19,13 +27,17 @@ public class ToDoTest {
     }
 
     @Test
-    public void testToDo_toString_correctFormat() {
-        ToDo todo = new ToDo("read");
+    public void toString_unCompleted_correctFormat() {
+        ToDo read = new ToDo("read");
 
-        Assertions.assertEquals("[T][X] read", todo.toString());
+        Assertions.assertEquals("[T][X] read", read.toString());
+    }
 
-        todo.setCompleted();
+    @Test
+    public void toString_completed_correctFormat() {
+        ToDo study = new ToDo("study");
+        study.setCompleted();
 
-        Assertions.assertEquals("[T][✓] read", todo.toString());
+        Assertions.assertEquals("[T][✓] study", study.toString());
     }
 }

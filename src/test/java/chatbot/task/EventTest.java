@@ -8,7 +8,7 @@ import java.time.ZoneId;
 
 public class EventTest {
     @Test
-    public void testEvent_dateToString_dateAndTime() {
+    public void dateToString_dateAndTime_success() {
         LocalDateTime start = LocalDateTime.of(2025, 5, 5, 9, 30);
         LocalDateTime end = LocalDateTime.of(2025, 12, 13, 22, 5);
 
@@ -21,14 +21,16 @@ public class EventTest {
     // saveString indirectly tested in StorageTest
 
     @Test
-    public void testDeadline_toString_correctFormat() {
-        Deadline dl = new Deadline("assignment", LocalDateTime.of(2025,
-                12, 12, 8, 0));
+    public void toString_correctFormat() {
+        Event e = new Event("training",
+                LocalDateTime.of(2025, 3, 1, 8, 0),
+                LocalDateTime.of(2025, 11, 12, 23, 59));
 
-        Assertions.assertEquals("[D][X] assignment (12 Dec 8:00am)", dl.toString());
+        Assertions.assertEquals("[E][X] training (1 Mar 8:00am - 12 Nov 11:59pm)", e.toString());
 
-        dl.setCompleted();
+        // Placing both assertions as class:To-Do already tested both separately
+        e.setCompleted();
 
-        Assertions.assertEquals("[D][✓] assignment (12 Dec 8:00am)", dl.toString());
+        Assertions.assertEquals("[E][✓] training (1 Mar 8:00am - 12 Nov 11:59pm)", e.toString());
     }
 }
