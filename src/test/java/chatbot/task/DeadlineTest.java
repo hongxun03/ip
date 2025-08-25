@@ -31,6 +31,8 @@ public class DeadlineTest {
         Assertions.assertEquals("12 Dec 8:00am", dl.dateToString());
     }
 
+    // saveString indirectly tested in StorageTest
+
     @Test
     public void testDeadline_toString() {
         Deadline dl = new Deadline("assignment", LocalDateTime.of(2025,

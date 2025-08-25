@@ -18,6 +18,8 @@ public class EventTest {
         Assertions.assertEquals("13 Dec 10:05pm", event.dateToString(event.dueDateTime));
     }
 
+    // saveString indirectly tested in StorageTest
+
     @Test
     public void testDeadline_toString() {
         Deadline dl = new Deadline("assignment", LocalDateTime.of(2025,
