@@ -8,7 +8,7 @@ import java.time.ZoneId;
 
 public class EventTest {
     @Test
-    public void testEvent_dateToString() {
+    public void testEvent_dateToString_dateAndTime() {
         LocalDateTime start = LocalDateTime.of(2025, 5, 5, 9, 30);
         LocalDateTime end = LocalDateTime.of(2025, 12, 13, 22, 5);
 
@@ -21,7 +21,7 @@ public class EventTest {
     // saveString indirectly tested in StorageTest
 
     @Test
-    public void testDeadline_toString() {
+    public void testDeadline_toString_correctFormat() {
         Deadline dl = new Deadline("assignment", LocalDateTime.of(2025,
                 12, 12, 8, 0));
 
