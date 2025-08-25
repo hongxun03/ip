@@ -59,7 +59,7 @@ public class Storage {
         boolean isCompleted = lineSplit[1].equals("✓");
         String desc =  lineSplit[2];
 
-        return switch (type) {
+        Task task =  switch (type) {
             case "T" -> new ToDo(desc);
             case "D" -> new Deadline(desc, Parser.parseDate(lineSplit[3]));
             case "E" -> {
@@ -70,5 +70,11 @@ public class Storage {
             }
             default -> null;
         };
+
+        if (task != null && isCompleted) {
+            task.setCompleted();
+        }
+
+        return task;
     }
 }
