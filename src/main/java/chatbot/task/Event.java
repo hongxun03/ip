@@ -13,7 +13,7 @@ public class Event extends Task {
         this.dueDateTime = dueDateTime;
     }
 
-    private String dateToString(LocalDateTime date) {
+    protected String dateToString(LocalDateTime date) {
         return date.format(DateTimeFormatter.ofPattern("d MMM h:mma"));
     }
 
