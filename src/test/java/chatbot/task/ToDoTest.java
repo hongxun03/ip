@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public class ToDoTest {
 
     @Test
-    public void ToDoTest_completeAndUnCompleteTask() {
+    public void testToDo_completeAndUnCompleteTask() {
         ToDo todo = new ToDo("read");
 
         Assertions.assertFalse(todo.isCompleted);
@@ -19,7 +19,7 @@ public class ToDoTest {
     }
 
     @Test
-    public void ToDoTest_toString() {
+    public void testToDo_toString() {
         ToDo todo = new ToDo("read");
 
         Assertions.assertEquals("[T][X] read", todo.toString());
