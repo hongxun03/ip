@@ -1,6 +1,6 @@
-package parser;
+package chatbot.parser;
 
-import task.TaskException;
+import chatbot.task.TaskException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,11 +18,11 @@ public class Parser {
 
     private static final DateTimeFormatter SAVE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    public LocalDateTime formatDate(String date) throws DateTimeParseException {
+    public static LocalDateTime formatDate(String date) throws DateTimeParseException {
         return LocalDateTime.parse(date, DATE_FORMAT);
     }
 
-    public int parseTaskIndex(String arg, int listSize) throws TaskException {
+    public static int parseTaskIndex(String arg, int listSize) throws TaskException {
         try {
             int index = Integer.parseInt(arg) - 1;
             if (index < 0 || index >= listSize) {

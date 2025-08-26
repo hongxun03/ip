@@ -1,20 +1,18 @@
-package task;
+package chatbot.task;
 
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import parser.Parser;
-import storage.Storage;
+import chatbot.parser.Parser;
+import chatbot.storage.Storage;
 
 public class TaskList {
     private static final String LINE = "\t____________________________________________________________";
     private final ArrayList<Task> tasks;
     private Storage storage;
-    private Parser parser;
 
     public TaskList(ArrayList<Task> tasks, Storage storage) {
         this.tasks = tasks;
         this.storage = storage;
-        this.parser = new Parser();
     }
 
     public void op(String message) {
@@ -63,7 +61,7 @@ public class TaskList {
             }
 
             try {
-                tasks.add(new Deadline(split1[0], parser.formatDate(split1[1])));
+                tasks.add(new Deadline(split1[0], Parser.formatDate(split1[1])));
                 break;
             } catch (DateTimeParseException e) {
                 System.out.println(LINE);
@@ -89,8 +87,8 @@ public class TaskList {
 
             try {
                 tasks.add(new Event(fromSplit[0],
-                        parser.formatDate(bySplit[0]),
-                        parser.formatDate(bySplit[1])));
+                        Parser.formatDate(bySplit[0]),
+                        Parser.formatDate(bySplit[1])));
                 break;
             } catch(DateTimeParseException e) {
                 System.out.println(LINE);
@@ -106,7 +104,7 @@ public class TaskList {
         int listSize = tasks.size();
         System.out.println(LINE + "\n\t Got it. I've added this task:");
         System.out.println("\t\t" + tasks.get(listSize - 1).toString());
-        System.out.println("\t Now you have " + listSize + (listSize == 1 ? " task" : " tasks")
+        System.out.println("\t Now you have " + listSize + (listSize == 1 ? "chatbot/task" : " tasks")
                 + " in the list.\n" + LINE);
     }
 
@@ -129,7 +127,7 @@ public class TaskList {
         }
 
         try {
-            int index = parser.parseTaskIndex(arg, tasks.size());
+            int index = Parser.parseTaskIndex(arg, tasks.size());
             Task task = tasks.get(index);
             task.setCompleted();
             storage.save(tasks);
@@ -150,7 +148,7 @@ public class TaskList {
         }
 
         try {
-            int index = parser.parseTaskIndex(arg, tasks.size());
+            int index = Parser.parseTaskIndex(arg, tasks.size());
             Task task = tasks.get(index);
             task.unComplete();
             storage.save(tasks);
@@ -172,14 +170,14 @@ public class TaskList {
 
         try {
             int size = tasks.size();
-            int index = parser.parseTaskIndex(arg, size);
+            int index = Parser.parseTaskIndex(arg, size);
             Task task =  tasks.get(index);
             tasks.remove(task);
             storage.save(tasks);
 
             size = tasks.size();
             System.out.println("\t Noted. I've deleted this task from your list:\n\t\t" + task.toString());
-            System.out.println("\t Now you have " + size + (size == 1 ? " task" : " tasks")
+            System.out.println("\t Now you have " + size + (size == 1 ? "chatbot/task" : " tasks")
                     + " remaining.");
         } catch (TaskException e) {
             System.out.println("\t Whoops! " + e.getMessage());

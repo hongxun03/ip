@@ -1,4 +1,4 @@
-package task;
+package chatbot.task;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -14,7 +14,7 @@ public class Deadline extends Task {
         this.dueDate = dueDate;
     }
 
-    private String dateToString() {
+    protected String dateToString() {
         LocalDate today = LocalDate.now(ZoneId.of("Asia/Singapore"));
         LocalDate monday = today.with(java.time.temporal.TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate sunday = today.with(java.time.temporal.TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));

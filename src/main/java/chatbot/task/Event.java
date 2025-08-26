@@ -1,11 +1,7 @@
-package task;
+package chatbot.task;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
 
 public class Event extends Task {
     protected LocalDateTime fromDateTime;
@@ -17,7 +13,7 @@ public class Event extends Task {
         this.dueDateTime = dueDateTime;
     }
 
-    private String dateToString(LocalDateTime date) {
+    protected String dateToString(LocalDateTime date) {
         return date.format(DateTimeFormatter.ofPattern("d MMM h:mma"));
     }
 
