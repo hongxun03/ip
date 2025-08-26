@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import chatbot.parser.Parser;
 import chatbot.storage.Storage;
 
+/**
+ * A <code>TaskList</code> object represents an <code>ArrayList</code> of tasks.
+ * This <code>ArrayList</code> is read from a <code>Storage</code> object.
+ *
+ * @author hongxun03
+ */
 public class TaskList {
     private static final String LINE = "\t____________________________________________________________";
     private final ArrayList<Task> tasks;
@@ -15,6 +21,19 @@ public class TaskList {
         this.storage = storage;
     }
 
+    /**
+     * Performs an operation based on the input of the user.
+     *
+     * <p>
+     *     If command is list: List out all current <code>Task</code>s.<br>
+     *     If command is mark: Mark the specified <code>Task</code> as completed.<br>
+     *     If command is unmark: Mark the specified <code>Task</code> as uncompleted.<br>
+     *     If command is delete: Delete the specified <code>Task</code>.<br>
+     *     Otherwise, command must be an add operation. {@link #addTask(String, String)}
+     *     </p>
+     *
+     * @param message The input from the user.
+     */
     public void op(String message) {
         String[] parts =  message.split(" ", 2);
         String command = parts[0];
@@ -42,6 +61,20 @@ public class TaskList {
         }
     }
 
+    /**
+     * Adds a new <code>Task</code> and stores it in the <code>Storage</code>.
+     *
+     * <p>
+     *     If command is <code>ToDo</code>: Create new <code>ToDo</code> object.<br>
+     *     If command is <code>Deadline</code>: Create new <code>Deadline</code> object.<br>
+     *     If command is <code>Event</code>: Create new <code>Event</code> object.<br>
+     *     Else: chatbot cannot recognise command.
+     * </p>
+     *
+     * @param command The <code>Task</code> to be added.
+     * @param arg The description of the <code>Task</code>.
+     * @throws TaskException if input is in wrong format or not recognised.
+     */
     public void addTask(String command, String arg) throws TaskException{
         switch (command) {
         case "todo":
@@ -108,6 +141,9 @@ public class TaskList {
                 + " in the list.\n" + LINE);
     }
 
+    /**
+     * Prints out all current <code>Task</code>s.
+     */
     public void listTasks() {
         System.out.println(LINE);
         System.out.println("\t Here are the tasks in your list:");
@@ -117,6 +153,12 @@ public class TaskList {
         System.out.println(LINE);
     }
 
+    /**
+     * Marks the current <code>Task</code> as completed.
+     * The arg argument specifies the index in the <code>TaskList</code>.
+     *
+     * @param arg The string representation of the index.
+     */
     public void markTask(String arg) {
         System.out.println(LINE);
 
@@ -138,6 +180,12 @@ public class TaskList {
         System.out.println(LINE);
     }
 
+    /**
+     * Marks the current <code>Task</code> as uncompleted.
+     * The arg argument specifies the index in the <code>TaskList</code>.
+     *
+     * @param arg The string representation of the index.
+     */
     public void unMarkTask(String arg) {
         System.out.println(LINE);
 
@@ -159,6 +207,12 @@ public class TaskList {
         System.out.println(LINE);
     }
 
+    /**
+     * Deletes the current <code>Task</code>.
+     * The arg argument specifies the index in the <code>TaskList</code>.
+     *
+     * @param arg The string representation of the index.
+     */
     public void deleteTask(String arg) {
         System.out.println(LINE);
 

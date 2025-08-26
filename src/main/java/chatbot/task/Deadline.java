@@ -6,6 +6,12 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 
+/**
+ * The <code>Deadline</code> class is a subclass of the <code>Task</code> class.
+ * The <code>Deadline</code> object contains a description, completion status and its due date.
+ *
+ * @author hongxun03
+ */
 public class Deadline extends Task {
     protected LocalDateTime dueDate;
 

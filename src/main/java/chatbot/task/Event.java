@@ -3,6 +3,12 @@ package chatbot.task;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 
+/**
+ * The <code>Event</code> class is a subclass of the <code>Task</code> class.
+ * The <code>Event</code> object has a description, completion status, start dateTime and end dateTime.
+ *
+ * @author hongxun03
+ */
 public class Event extends Task {
     protected LocalDateTime fromDateTime;
     protected LocalDateTime dueDateTime;
