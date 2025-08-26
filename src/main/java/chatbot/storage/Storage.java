@@ -1,11 +1,20 @@
 package chatbot.storage;
 
-import chatbot.parser.Parser;
-import chatbot.task.*;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import chatbot.parser.Parser;
+import chatbot.task.Deadline;
+import chatbot.task.Event;
+import chatbot.task.Task;
+import chatbot.task.TaskException;
+import chatbot.task.ToDo;
 
 public class Storage {
     private String filePath;
@@ -27,7 +36,7 @@ public class Storage {
         } else {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String line;
-                while ((line = br.readLine()) != null)  {
+                while ((line = br.readLine()) != null) {
                     Task task = parseTask(line);
                     if (task != null) {
                         tasks.add(task);
@@ -57,18 +66,18 @@ public class Storage {
         String[] lineSplit = line.split(" \\| ");
         String type = lineSplit[0];
         boolean isCompleted = lineSplit[1].equals("✓");
-        String desc =  lineSplit[2];
+        String desc = lineSplit[2];
 
-        Task task =  switch (type) {
-            case "T" -> new ToDo(desc);
-            case "D" -> new Deadline(desc, Parser.parseDate(lineSplit[3]));
-            case "E" -> {
-                String[] dateSplit = lineSplit[3].split(" - ");
-                yield new Event(desc,
-                        LocalDateTime.parse(dateSplit[0]),
-                        LocalDateTime.parse(dateSplit[1]));
-            }
-            default -> null;
+        Task task = switch (type) {
+        case "T" -> new ToDo(desc);
+        case "D" -> new Deadline(desc, Parser.parseDate(lineSplit[3]));
+        case "E" -> {
+            String[] dateSplit = lineSplit[3].split(" - ");
+            yield new Event(desc,
+                    LocalDateTime.parse(dateSplit[0]),
+                    LocalDateTime.parse(dateSplit[1]));
+        }
+        default -> null;
         };
 
         if (task != null && isCompleted) {

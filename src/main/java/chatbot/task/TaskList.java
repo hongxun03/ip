@@ -2,6 +2,7 @@ package chatbot.task;
 
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+
 import chatbot.parser.Parser;
 import chatbot.storage.Storage;
 
@@ -16,7 +17,7 @@ public class TaskList {
     }
 
     public void op(String message) {
-        String[] parts =  message.split(" ", 2);
+        String[] parts = message.split(" ", 2);
         String command = parts[0];
         String arg = (parts.length > 1) ? parts[1] : "";
 
@@ -42,7 +43,7 @@ public class TaskList {
         }
     }
 
-    public void addTask(String command, String arg) throws TaskException{
+    public void addTask(String command, String arg) throws TaskException {
         switch (command) {
         case "todo":
             if (arg.isEmpty()) {
@@ -90,7 +91,7 @@ public class TaskList {
                         Parser.formatDate(bySplit[0]),
                         Parser.formatDate(bySplit[1])));
                 break;
-            } catch(DateTimeParseException e) {
+            } catch (DateTimeParseException e) {
                 System.out.println(LINE);
                 System.out.println("\t Enter a valid date and time, format: DD/MM HHMM");
                 System.out.println(LINE);
@@ -171,7 +172,7 @@ public class TaskList {
         try {
             int size = tasks.size();
             int index = Parser.parseTaskIndex(arg, size);
-            Task task =  tasks.get(index);
+            Task task = tasks.get(index);
             tasks.remove(task);
             storage.save(tasks);
 

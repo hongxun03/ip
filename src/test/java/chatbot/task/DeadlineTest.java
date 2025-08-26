@@ -1,18 +1,18 @@
 package chatbot.task;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 public class DeadlineTest {
 
-    LocalDate today = LocalDate.now(ZoneId.of("Asia/Singapore"));
-    LocalDate monday = today.with(java.time.temporal.TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+    private LocalDate today = LocalDate.now(ZoneId.of("Asia/Singapore"));
+    private LocalDate monday = today.with(java.time.temporal.TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
 
     @Test
     public void dateToString_today_onlyTime() {

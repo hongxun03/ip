@@ -1,10 +1,9 @@
 package chatbot.task;
 
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 public class EventTest {
     @Test
