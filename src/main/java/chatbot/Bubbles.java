@@ -3,6 +3,17 @@ package chatbot;
 import chatbot.storage.Storage;
 import chatbot.task.TaskList;
 
+/**
+ * The <code>Bubbles</code> program is the main implementation of the chatbot.
+ *
+ * <p>
+ * It makes use of its <code>UI</code>, <code>TaskList</code> and <code>Storage</code> to properly handle and
+ * store user input.
+ * </p>
+ *
+ * @author hongxun03
+ *
+ */
 public class Bubbles {
     private Ui ui;
     private TaskList tasks;
@@ -14,6 +25,9 @@ public class Bubbles {
         ui = new Ui(tasks);
     }
 
+    /**
+     * Runs the chatbot.
+     */
     public void run() {
         ui.start();
         ui.getInput();

@@ -7,6 +7,12 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+/**
+ * A <code>Storage</code> object helps to store the tasks inputted by the user. The <code>Storage</code> object
+ * can load and save the list of tasks.
+ *
+ * @author hongxun03
+ */
 public class Storage {
     private String filePath;
 
@@ -14,6 +20,11 @@ public class Storage {
         this.filePath = filePath;
     }
 
+    /**
+     * Loads the list of tasks stored by the text file.
+     *
+     * @return An <code>ArrayList</code> of tasks
+     */
     public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
@@ -42,6 +53,11 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves the current lists of tasks into a text file.
+     *
+     * @param tasks An <code>ArrayList</code> of tasks
+     */
     public void save(ArrayList<Task> tasks) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
             for (Task task : tasks) {
