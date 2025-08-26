@@ -34,7 +34,7 @@ public class UiTest {
     }
 
     @Test
-    public void testUi_sampleFile_noTasks() {
+    public void testUi_sampleFile_3TasksShown() {
         String filePath = "./data/SampleBubbles.txt";
 
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
