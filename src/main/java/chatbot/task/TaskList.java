@@ -53,6 +53,9 @@ public class TaskList {
         case "delete":
             deleteTask(arg);
             break;
+        case "find":
+            findTasks(arg);
+            break;
         default:
             try {
                 addTask(command, arg);
@@ -140,6 +143,41 @@ public class TaskList {
         System.out.println("\t\t" + tasks.get(listSize - 1).toString());
         System.out.println("\t Now you have " + listSize + (listSize == 1 ? "chatbot/task" : " tasks")
                 + " in the list.\n" + LINE);
+    }
+
+    /**
+     * Prints out all the tasks that have a matching keyword in its description.
+     * The arg argument specifies the specific keyword to match.
+     *
+     * @param arg The keyword
+     */
+    public void findTasks(String arg) {
+        System.out.println(LINE);
+
+        if (arg.isEmpty()) {
+            System.out.println("\t Whoops! Specify a keyword for us to find the tasks.");
+            System.out.println(LINE);
+            return;
+        }
+
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.taskName.contains(arg)) {
+                matchingTasks.add(task);
+            }
+        }
+
+        if (matchingTasks.isEmpty()) {
+            System.out.println("\t There are no matching tasks in your list.");
+        } else {
+            int listSize = matchingTasks.size();
+            System.out.println("\t There are " + listSize + " matching tasks in your list.");
+            for (int i = 0; i < listSize; i++) {
+                System.out.println("\t " + (i + 1) + ". " + matchingTasks.get(i).toString());
+            }
+        }
+
+        System.out.println(LINE);
     }
 
     /**
