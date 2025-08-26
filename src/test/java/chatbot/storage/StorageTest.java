@@ -1,11 +1,12 @@
 package chatbot.storage;
 
-import chatbot.task.Task;
-import chatbot.task.ToDo;
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import chatbot.task.Task;
+import chatbot.task.ToDo;
 
 public class StorageTest {
     @Test

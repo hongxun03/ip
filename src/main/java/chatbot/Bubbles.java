@@ -19,6 +19,9 @@ public class Bubbles {
     private TaskList tasks;
     private Storage storage;
 
+    /**
+     * Constructs a <code>Bubbles</code> object.
+     */
     public Bubbles(String filePath) {
         storage = new Storage(filePath);
         tasks = new TaskList(storage.load(), storage);

@@ -1,7 +1,7 @@
 package chatbot.task;
 
 public class TaskException extends Exception {
-    Task task;
+    private Task task;
 
     public TaskException(String message) {
         super(message);

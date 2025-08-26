@@ -1,7 +1,8 @@
 package chatbot;
 
-import chatbot.task.TaskList;
 import java.util.Scanner;
+
+import chatbot.task.TaskList;
 
 /**
  * The <code>UI</code> represents the interactive portion of the chatbot to receive commands from user.
@@ -10,7 +11,7 @@ import java.util.Scanner;
  */
 public class Ui {
     private static final String LINE = "\t____________________________________________________________";
-    private final String NAME = "Bubbles";
+    private static final String NAME = "Bubbles";
     private TaskList tasks;
 
     public Ui(TaskList tasks) {

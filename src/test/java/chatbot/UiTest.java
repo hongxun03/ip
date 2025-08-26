@@ -1,12 +1,13 @@
 package chatbot;
 
-import chatbot.storage.Storage;
-import chatbot.task.TaskList;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import chatbot.storage.Storage;
+import chatbot.task.TaskList;
 
 public class UiTest {
     @Test
@@ -22,9 +23,9 @@ public class UiTest {
 
         String output = outContent.toString();
         String[] expectedLines = {
-                "Hello! I'm Bubbles",
-                "Here are the tasks in your list:",
-                "What can I do for you?"
+            "Hello! I'm Bubbles",
+            "Here are the tasks in your list:",
+            "What can I do for you?"
         };
 
         for (String expectedLine : expectedLines) {
@@ -34,7 +35,7 @@ public class UiTest {
     }
 
     @Test
-    public void testUi_sampleFile_3TasksShown() {
+    public void testUi_sampleFile_threeTasksShown() {
         String filePath = "./data/SampleBubbles.txt";
 
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -46,12 +47,12 @@ public class UiTest {
 
         String output = outContent.toString();
         String[] expectedLines = {
-                "Hello! I'm Bubbles",
-                "Here are the tasks in your list:",
-                "1. [T][X] read",
-                "2. [D][✓] homework (5 Oct 2:00pm)",
-                "3. [E][X] hackathon (10 Oct 12:00pm - 15 Oct 12:00pm)",
-                "What can I do for you?"
+            "Hello! I'm Bubbles",
+            "Here are the tasks in your list:",
+            "1. [T][X] read",
+            "2. [D][✓] homework (5 Oct 2:00pm)",
+            "3. [E][X] hackathon (10 Oct 12:00pm - 15 Oct 12:00pm)",
+            "What can I do for you?"
         };
 
         for (String expectedLine : expectedLines) {
