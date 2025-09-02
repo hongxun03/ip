@@ -17,6 +17,12 @@ public class TaskList {
     private final ArrayList<Task> tasks;
     private Storage storage;
 
+    /**
+     * Constructor to create a list of <code>Task</code>s.
+     *
+     * @param tasks An <code>ArrayList</code> of <code>Task</code>s.
+     * @param storage The <code>Storage</code> of previous <code>Task</code>s.
+     */
     public TaskList(ArrayList<Task> tasks, Storage storage) {
         this.tasks = tasks;
         this.storage = storage;
