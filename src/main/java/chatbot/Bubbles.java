@@ -33,7 +33,13 @@ public class Bubbles {
      */
     public void run() {
         ui.start();
-        ui.getInput();
+    }
+
+    public String getResponse(String input) {
+        if (input.equalsIgnoreCase("bye")) {
+            return ui.bye();
+        }
+        return tasks.op(input);
     }
 
     public static void main(String[] args) {

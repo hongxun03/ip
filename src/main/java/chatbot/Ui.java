@@ -10,7 +10,6 @@ import chatbot.task.TaskList;
  * @author hongxun03
  */
 public class Ui {
-    private static final String LINE = "\t____________________________________________________________";
     private static final String NAME = "Bubbles";
     private TaskList tasks;
 
@@ -21,38 +20,14 @@ public class Ui {
     /**
      * Introduces chatbot and lists out tasks stored.
      */
-    public void start() {
-        System.out.println(LINE + "\n\tHello! I'm " + NAME);
-        tasks.listTasks();
-        System.out.println("\tWhat can I do for you?\n" + LINE);
-    }
-
-    /**
-     * Receives input from user and sends to TaskList to perform the operation.
-     * If input is bye, chatbot is stopped.
-     */
-    public void getInput() {
-        Scanner scanner = new Scanner(System.in);
-        String message;
-
-        while (true) {
-            message = scanner.nextLine().trim();
-            if (message.isEmpty()) {
-                continue;
-            } else if (message.equalsIgnoreCase("bye")) {
-                bye();
-                scanner.close();
-                break;
-            }
-
-            tasks.op(message);
-        }
+    public String start() {
+        return "Hello! I'm " + NAME + tasks.listTasks() + "\nWhat can I do for you?";
     }
 
     /**
      * Ends the chatbot with a parting message.
      */
-    private void bye() {
-        System.out.println(LINE + "\n\tBye. Hope to see you again soon!\n" + LINE);
+    public String bye() {
+        return "Bye. Hope to see you again soon!";
     }
 }
