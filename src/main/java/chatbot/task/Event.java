@@ -13,6 +13,13 @@ public class Event extends Task {
     protected LocalDateTime fromDateTime;
     protected LocalDateTime dueDateTime;
 
+    /**
+     * Constructor to create a <code>Event</code> task
+     *
+     * @param taskName description of task.
+     * @param fromDateTime starting date and time of task.
+     * @param dueDateTime ending date and time of task.
+     */
     public Event(String taskName, LocalDateTime fromDateTime, LocalDateTime dueDateTime) {
         super(taskName);
         this.fromDateTime = fromDateTime;
