@@ -26,6 +26,6 @@ public class TaskException extends Exception {
 
     @Override
     public String toString() {
-        return "\t Oops! " + super.getMessage();
+        return "Oops! " + super.getMessage();
     }
 }

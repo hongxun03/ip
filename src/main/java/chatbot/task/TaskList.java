@@ -13,7 +13,6 @@ import chatbot.storage.Storage;
  * @author hongxun03
  */
 public class TaskList {
-    private static final String LINE = "\t____________________________________________________________";
     private final ArrayList<Task> tasks;
     private Storage storage;
 
@@ -40,33 +39,29 @@ public class TaskList {
      *     </p>
      *
      * @param message The input from the user.
+     * @return The output message after performing operation.
      */
-    public void op(String message) {
+    public String op(String message) {
         String[] parts = message.split(" ", 2);
         String command = parts[0];
         String arg = (parts.length > 1) ? parts[1] : "";
 
         switch (command) {
         case "list":
-            listTasks();
-            break;
+            return listTasks();
         case "mark":
-            markTask(arg);
-            break;
+            return markTask(arg);
         case "unmark":
-            unMarkTask(arg);
-            break;
+            return unMarkTask(arg);
         case "delete":
-            deleteTask(arg);
-            break;
+            return deleteTask(arg);
         case "find":
-            findTasks(arg);
-            break;
+            return findTasks(arg);
         default:
             try {
-                addTask(command, arg);
+                return addTask(command, arg);
             } catch (TaskException e) {
-                System.out.println(LINE + "\n" + e.toString() + "\n" + LINE);
+                return e.toString();
             }
         }
     }
@@ -83,9 +78,10 @@ public class TaskList {
      *
      * @param command The <code>Task</code> to be added.
      * @param arg The description of the <code>Task</code>.
-     * @throws TaskException if input is in wrong format or not recognised.
+     * @return The message of the operation.
+     * @throws TaskException If input is in wrong format or not recognised.
      */
-    public void addTask(String command, String arg) throws TaskException {
+    public String addTask(String command, String arg) throws TaskException {
         switch (command) {
         case "todo":
             if (arg.isEmpty()) {
@@ -107,10 +103,7 @@ public class TaskList {
                 tasks.add(new Deadline(split1[0], Parser.formatDate(split1[1])));
                 break;
             } catch (DateTimeParseException e) {
-                System.out.println(LINE);
-                System.out.println("\t Enter a valid date and time, format: DD/MM HHMM");
-                System.out.println(LINE);
-                return;
+                return "Enter a valid date and time, format: DD/MM HHMM";
             }
 
         case "event":
@@ -134,10 +127,7 @@ public class TaskList {
                         Parser.formatDate(bySplit[1])));
                 break;
             } catch (DateTimeParseException e) {
-                System.out.println(LINE);
-                System.out.println("\t Enter a valid date and time, format: DD/MM HHMM");
-                System.out.println(LINE);
-                return;
+                return "Enter a valid date and time, format: DD/MM HHMM";
             }
 
         default:
@@ -145,25 +135,24 @@ public class TaskList {
         }
         storage.save(tasks);
         int listSize = tasks.size();
-        System.out.println(LINE + "\n\t Got it. I've added this task:");
-        System.out.println("\t\t" + tasks.get(listSize - 1).toString());
-        System.out.println("\t Now you have " + listSize + (listSize == 1 ? "chatbot/task" : " tasks")
-                + " in the list.\n" + LINE);
+        return "Got it. I've added this task:\n\t"
+                + tasks.get(listSize - 1)
+                + "\nNow you have "
+                + listSize
+                + (listSize == 1 ? "task" : " tasks")
+                + " in the list.";
     }
 
     /**
-     * Prints out all the tasks that have a matching keyword in its description.
+     * Returns all the tasks that have a matching keyword in its description.
      * The arg argument specifies the specific keyword to match.
      *
-     * @param arg The keyword
+     * @param arg The keyword.
+     * @return A list of tasks with matching keyword.
      */
-    public void findTasks(String arg) {
-        System.out.println(LINE);
-
+    public String findTasks(String arg) {
         if (arg.isEmpty()) {
-            System.out.println("\t Whoops! Specify a keyword for us to find the tasks.");
-            System.out.println(LINE);
-            return;
+            return "Whoops! Specify a keyword for me to find the tasks.";
         }
 
         ArrayList<Task> matchingTasks = new ArrayList<>();
@@ -174,28 +163,37 @@ public class TaskList {
         }
 
         if (matchingTasks.isEmpty()) {
-            System.out.println("\t There are no matching tasks in your list.");
+            return "There are no matching tasks in your list.";
         } else {
             int listSize = matchingTasks.size();
-            System.out.println("\t There are " + listSize + " matching tasks in your list.");
+            StringBuilder output = new StringBuilder();
+            output.append("There are ")
+                    .append(listSize)
+                    .append(" matching tasks in your list.");
             for (int i = 0; i < listSize; i++) {
-                System.out.println("\t " + (i + 1) + ". " + matchingTasks.get(i).toString());
+                output.append("\n\t ")
+                        .append(i + 1)
+                        .append(". ")
+                        .append(matchingTasks.get(i).toString());
             }
+            return output.toString();
         }
-
-        System.out.println(LINE);
     }
 
     /**
-     * Prints out all current <code>Task</code>s.
+     * Returns a list of all current <code>Task</code>s.
+     *
+     * @return A list of all current tasks.
      */
-    public void listTasks() {
-        System.out.println(LINE);
-        System.out.println("\t Here are the tasks in your list:");
+    public String listTasks() {
+        StringBuilder output = new StringBuilder("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println("\t " + (i + 1) + ". " + tasks.get(i).toString());
+            output.append("\n\t ")
+                    .append(i + 1)
+                    .append(". ")
+                    .append(tasks.get(i).toString());
         }
-        System.out.println(LINE);
+        return output.toString();
     }
 
     /**
@@ -203,14 +201,12 @@ public class TaskList {
      * The arg argument specifies the index in the <code>TaskList</code>.
      *
      * @param arg The string representation of the index.
+     * @return The output message of marking the task.
      */
-    public void markTask(String arg) {
-        System.out.println(LINE);
+    public String markTask(String arg) {
 
         if (tasks.isEmpty()) {
-            System.out.println("\t Whoops! You need to add a task first.");
-            System.out.println(LINE);
-            return;
+            return "Whoops! You need to add a task first.";
         }
 
         try {
@@ -218,11 +214,10 @@ public class TaskList {
             Task task = tasks.get(index);
             task.setCompleted();
             storage.save(tasks);
-            System.out.println("\t Nice! I've marked this task as done:\n\t\t" + task.toString());
+            return "Nice! I've marked this task as done:\n\t" + task.toString();
         } catch (TaskException e) {
-            System.out.println("\t Whoops! " + e.getMessage());
+            return "Whoops! " + e.getMessage();
         }
-        System.out.println(LINE);
     }
 
     /**
@@ -230,14 +225,12 @@ public class TaskList {
      * The arg argument specifies the index in the <code>TaskList</code>.
      *
      * @param arg The string representation of the index.
+     * @return The output message of unmarking the task.
      */
-    public void unMarkTask(String arg) {
-        System.out.println(LINE);
+    public String unMarkTask(String arg) {
 
         if (tasks.isEmpty()) {
-            System.out.println("\t Whoops! You need to add a task first.");
-            System.out.println(LINE);
-            return;
+            return "Whoops! You need to add a task first.";
         }
 
         try {
@@ -245,11 +238,10 @@ public class TaskList {
             Task task = tasks.get(index);
             task.unComplete();
             storage.save(tasks);
-            System.out.println("\t OK, I've marked this task as not done yet:\n\t\t" + task.toString());
+            return "OK, I've marked this task as not done yet:\n\t" + task.toString();
         } catch (TaskException e) {
-            System.out.println("\t Whoops! " + e.getMessage());
+            return "Whoops! " + e.getMessage();
         }
-        System.out.println(LINE);
     }
 
     /**
@@ -257,14 +249,12 @@ public class TaskList {
      * The arg argument specifies the index in the <code>TaskList</code>.
      *
      * @param arg The string representation of the index.
+     * @return The task that is deleted.
      */
-    public void deleteTask(String arg) {
-        System.out.println(LINE);
+    public String deleteTask(String arg) {
 
         if (tasks.isEmpty()) {
-            System.out.println("\t Whoops! You need to add a task first.");
-            System.out.println(LINE);
-            return;
+            return "Whoops! You need to add a task first.";
         }
 
         try {
@@ -275,12 +265,14 @@ public class TaskList {
             storage.save(tasks);
 
             size = tasks.size();
-            System.out.println("\t Noted. I've deleted this task from your list:\n\t\t" + task.toString());
-            System.out.println("\t Now you have " + size + (size == 1 ? "chatbot/task" : " tasks")
-                    + " remaining.");
+            return new StringBuilder("Noted. I've deleted this task from your list:\n\t")
+                    .append(task.toString())
+                    .append("\n Now you have ")
+                    .append(size)
+                    .append(size == 1 ? "task remaining." : " tasks remaining.")
+                    .toString();
         } catch (TaskException e) {
-            System.out.println("\t Whoops! " + e.getMessage());
+            return "Whoops! " + e.getMessage();
         }
-        System.out.println(LINE);
     }
 }
