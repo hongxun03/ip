@@ -186,6 +186,9 @@ public class TaskList {
      * @return A list of all current tasks.
      */
     public String listTasks() {
+        // No assert statement for empty task list needed as it is alright for user to
+        // request a display of empty task list.
+
         StringBuilder output = new StringBuilder("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             output.append("\n\t ")
@@ -210,8 +213,11 @@ public class TaskList {
         }
 
         try {
-            int index = Parser.parseTaskIndex(arg, tasks.size());
+            int index = Parser.parseTaskIndex(arg, tasks.size()); // index bounds checks handled in parserTaskIndex
+
             Task task = tasks.get(index);
+            assert task != null;
+
             task.setCompleted();
             storage.save(tasks);
             return "Nice! I've marked this task as done:\n\t" + task.toString();
@@ -234,8 +240,11 @@ public class TaskList {
         }
 
         try {
-            int index = Parser.parseTaskIndex(arg, tasks.size());
+            int index = Parser.parseTaskIndex(arg, tasks.size()); // index bounds check handled in parseTaskIndex
+
             Task task = tasks.get(index);
+            assert task != null;
+
             task.unComplete();
             storage.save(tasks);
             return "OK, I've marked this task as not done yet:\n\t" + task.toString();
@@ -259,8 +268,11 @@ public class TaskList {
 
         try {
             int size = tasks.size();
-            int index = Parser.parseTaskIndex(arg, size);
+            int index = Parser.parseTaskIndex(arg, size); // index bounds checked in parseTaskIndex
+
             Task task = tasks.get(index);
+            assert task != null;
+
             tasks.remove(task);
             storage.save(tasks);
 
