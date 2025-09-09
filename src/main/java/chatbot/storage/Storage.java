@@ -38,26 +38,9 @@ public class Storage {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
         if (!file.exists()) {
-            try {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
-            } catch (IOException e) {
-                System.out.println("Error creating file: " + e.getMessage());
-            }
+            createFile(file);
         } else {
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    Task task = parseTask(line);
-                    if (task != null) {
-                        tasks.add(task);
-                    }
-                }
-            } catch (IOException e) {
-                System.out.println("Error loading file: " + e.getMessage());
-            } catch (TaskException e) {
-                System.out.println(e.getMessage());
-            }
+            readFile(file, tasks);
         }
         return tasks;
     }
@@ -101,5 +84,41 @@ public class Storage {
         }
 
         return task;
+    }
+
+    /**
+     * Create a storage file if it doesn't already exist.
+     *
+     * @param file The specified file to create.
+     */
+    private void createFile(File file) {
+        try {
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+        } catch (IOException e) {
+            System.out.println("Error creating file: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Reads the tasks in the existing file and places it into the current <code>TaskList</code>.
+     *
+     * @param file The storage file.
+     * @param tasks An <code>ArrayList</code> of tasks.
+     */
+    private void readFile(File file, ArrayList<Task> tasks) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                Task task = parseTask(line);
+                if (task != null) {
+                    tasks.add(task);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading file: " + e.getMessage());
+        } catch (TaskException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
