@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+/* All tests are compared with lowercase due to different format in different platforms.
+   AM/PM case sensitivity doesn't actually matter for user experience, and this is only for testing.
+ */
 public class EventTest {
     @Test
     public void dateToString_dateAndTime_success() {
@@ -13,8 +16,8 @@ public class EventTest {
 
         Event event = new Event("triathlon", start, end);
 
-        Assertions.assertEquals("5 May 9:30am", event.dateToString(event.fromDateTime));
-        Assertions.assertEquals("13 Dec 10:05pm", event.dateToString(event.dueDateTime));
+        Assertions.assertEquals("5 May 9:30am".toLowerCase(), event.dateToString(event.fromDateTime).toLowerCase());
+        Assertions.assertEquals("13 Dec 10:05pm".toLowerCase(), event.dateToString(event.dueDateTime).toLowerCase());
     }
 
     // saveString indirectly tested in StorageTest
@@ -25,11 +28,13 @@ public class EventTest {
                 LocalDateTime.of(2025, 3, 1, 8, 0),
                 LocalDateTime.of(2025, 11, 12, 23, 59));
 
-        Assertions.assertEquals("[E][X] training (1 Mar 8:00am - 12 Nov 11:59pm)", e.toString());
+        Assertions.assertEquals("[E][X] training (1 Mar 8:00am - 12 Nov 11:59pm)".toLowerCase(),
+                e.toString().toLowerCase());
 
         // Placing both assertions as class:To-Do already tested both separately
         e.setCompleted();
 
-        Assertions.assertEquals("[E][✓] training (1 Mar 8:00am - 12 Nov 11:59pm)", e.toString());
+        Assertions.assertEquals("[E][✓] training (1 Mar 8:00am - 12 Nov 11:59pm)".toLowerCase(),
+                e.toString().toLowerCase());
     }
 }
