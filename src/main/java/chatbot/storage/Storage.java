@@ -64,7 +64,7 @@ public class Storage {
     private Task parseTask(String line) throws TaskException {
         String[] lineSplit = line.split(" \\| ");
         String type = lineSplit[0];
-        boolean isCompleted = lineSplit[1].equals("✓");
+        boolean isCompleted = !lineSplit[1].equals("X");
         String desc = lineSplit[2];
 
         Task task = switch (type) {
