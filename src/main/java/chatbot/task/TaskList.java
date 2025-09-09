@@ -28,53 +28,65 @@ public class TaskList {
     }
 
     /**
-     * Performs an operation based on the input of the user.
-     *
-     * <p>
-     *     If command is list: List out all current <code>Task</code>s.<br>
-     *     If command is mark: Mark the specified <code>Task</code> as completed.<br>
-     *     If command is unmark: Mark the specified <code>Task</code> as uncompleted.<br>
-     *     If command is delete: Delete the specified <code>Task</code>.<br>
-     *     Otherwise, command must be an add operation. {@link #addTask(String, String)}
-     *     </p>
+     * Returns a string based on the operation performed.
      *
      * @param message The input from the user.
      * @return The output message after performing operation.
      */
     public String op(String message) {
-        String[] parts = message.split(" ", 2);
-        String command = parts[0];
-        String arg = (parts.length > 1) ? parts[1] : "";
+        Command command = parseCommand(message);
+        return executeCommand(command);
+    }
 
-        switch (command) {
-        case "list":
-            return listTasks();
-        case "mark":
-            return markTask(arg);
-        case "unmark":
-            return unMarkTask(arg);
-        case "delete":
-            return deleteTask(arg);
-        case "find":
-            return findTasks(arg);
-        default:
-            try {
-                return addTask(command, arg);
-            } catch (TaskException e) {
-                return e.toString();
-            }
+    private static class Command {
+        private final String name;
+        private final String argument;
+
+        public Command(String name, String argument) {
+            this.name = name;
+            this.argument = argument;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getArgument() {
+            return argument;
+        }
+    }
+
+    // Helper methods for Command operations.
+    private Command parseCommand(String message) {
+        String[] parts = message.split(" ", 2);
+        String commandName = parts[0];
+        String argument = (parts.length > 1) ? parts[1] : "";
+        return new Command(commandName, argument);
+    }
+
+    private String executeCommand(Command command) {
+        String arg = command.getArgument();
+
+        return switch (command.getName()) {
+        case "list" -> listTasks();
+        case "mark" -> markTask(arg);
+        case "unmark" -> unMarkTask(arg);
+        case "delete" -> deleteTask(arg);
+        case "find" -> findTasks(arg);
+        default -> handleTaskCreation(command);
+        };
+    }
+
+    private String handleTaskCreation(Command command) {
+        try {
+            return addTask(command.getName(), command.getArgument());
+        } catch (TaskException e) {
+            return e.toString();
         }
     }
 
     /**
      * Adds a new <code>Task</code> and stores it in the <code>Storage</code>.
-     *
-     * <p>
-     *     If command is <code>ToDo</code>: Create new <code>ToDo</code> object.<br>
-     *     If command is <code>Deadline</code>: Create new <code>Deadline</code> object.<br>
-     *     If command is <code>Event</code>: Create new <code>Event</code> object.<br>
-     *     Else: chatbot cannot recognise command.
-     * </p>
      *
      * @param command The <code>Task</code> to be added.
      * @param arg The description of the <code>Task</code>.
@@ -82,58 +94,96 @@ public class TaskList {
      * @throws TaskException If input is in wrong format or not recognised.
      */
     public String addTask(String command, String arg) throws TaskException {
-        switch (command) {
-        case "todo":
-            if (arg.isEmpty()) {
-                throw new TaskException("Enter the description of the todo.");
-            }
-            tasks.add(new ToDo(arg));
-            break;
+        Task task = createTask(command, arg);
+        addTaskToList(task);
+        return successAddMessage(task);
+    }
 
-        case "deadline":
-            if (arg.isEmpty()) {
-                throw new TaskException("Enter the description of the deadline.");
-            }
-            String[] split1 = arg.split(" /by ");
-            if (split1.length == 1) {
-                throw new TaskException("Enter the time of the deadline. Usage: deadline study /by 03/08 1800");
-            }
+    private Task createTask(String command, String arg) throws TaskException {
+        return switch (command) {
+        case "todo" -> createTodoTask(arg);
+        case "deadline" -> createDeadlineTask(arg);
+        case "event" -> createEventTask(arg);
+        default -> throw new TaskException("I don't understand that command.");
+        };
+    }
 
-            try {
-                tasks.add(new Deadline(split1[0], Parser.formatDate(split1[1])));
-                break;
-            } catch (DateTimeParseException e) {
-                return "Enter a valid date and time, format: DD/MM HHMM";
-            }
+    private Task createTodoTask(String arg) throws TaskException {
+        validateNotEmpty(arg, "Enter the description of the todo.");
+        return new ToDo(arg);
+    }
 
-        case "event":
-            if (arg.isEmpty()) {
-                throw new TaskException("Enter the description of the event.");
-            }
-            String[] fromSplit = arg.split(" /from ");
-            if (fromSplit.length == 1) {
-                throw new TaskException(
-                        "Enter the start time of the event. Usage: event meeting /from 03/08 1300 /to 03/08 1400");
-            }
-            String[] bySplit = fromSplit[1].split(" /to ");
-            if (bySplit.length == 1) {
-                throw new TaskException(
-                        "Enter the end time of the event. Usage: event meeting /from 03/08 1300 /to 03/08 1400");
-            }
+    private Task createDeadlineTask(String arg) throws TaskException {
+        validateNotEmpty(arg, "Enter the description of the deadline.");
 
-            try {
-                tasks.add(new Event(fromSplit[0],
-                        Parser.formatDate(bySplit[0]),
-                        Parser.formatDate(bySplit[1])));
-                break;
-            } catch (DateTimeParseException e) {
-                return "Enter a valid date and time, format: DD/MM HHMM";
-            }
+        String[] parts = parseDeadlineArguments(arg);
+        String description = parts[0];
+        String dateString = parts[1];
 
-        default:
-            throw new TaskException("I don't understand that command.");
+        try {
+            return new Deadline(description, Parser.formatDate(dateString));
+        } catch (DateTimeParseException e) {
+            return handleDateParseError();
         }
+    }
+
+    private Task createEventTask(String arg) throws TaskException {
+        validateNotEmpty(arg, "Enter the description of the event.");
+
+        String[] parts = parseEventArguments(arg);
+        String description = parts[0];
+        String startDateString = parts[1];
+        String endDateString = parts[2];
+
+        try {
+            return new Event(description,
+                    Parser.formatDate(startDateString),
+                    Parser.formatDate(endDateString));
+        } catch (DateTimeParseException e) {
+            return handleDateParseError();
+        }
+    }
+
+    private void validateNotEmpty(String arg, String errorMessage) throws TaskException {
+        if (arg.isEmpty()) {
+            throw new TaskException(errorMessage);
+        }
+    }
+
+    private String[] parseDeadlineArguments(String arg) throws TaskException {
+        String[] split = arg.split(" /by ");
+        if (split.length == 1) {
+            throw new TaskException("Enter the time of the deadline. Usage: deadline study /by 03/08 1800");
+        }
+        return split;
+    }
+
+    private String[] parseEventArguments(String arg) throws TaskException {
+        String[] fromSplit = arg.split(" /from ");
+        if (fromSplit.length == 1) {
+            throw new TaskException(
+                    "Enter the start time of the event. Usage: event meeting /from 03/08 1300 /to 03/08 1400");
+        }
+
+        String[] bySplit = fromSplit[1].split(" /to ");
+        if (bySplit.length == 1) {
+            throw new TaskException(
+                    "Enter the end time of the event. Usage: event meeting /from 03/08 1300 /to 03/08 1400");
+        }
+
+        return new String[]{fromSplit[0], bySplit[0], bySplit[1]};
+    }
+
+    private Task handleDateParseError() throws TaskException {
+        throw new TaskException("Enter a valid date and time, format: DD/MM HHMM");
+    }
+
+    private void addTaskToList(Task task) {
+        tasks.add(task);
         storage.save(tasks);
+    }
+
+    private String successAddMessage(Task task) {
         int listSize = tasks.size();
         return "Got it. I've added this task:\n\t"
                 + tasks.get(listSize - 1)
@@ -145,39 +195,18 @@ public class TaskList {
 
     /**
      * Returns all the tasks that have a matching keyword in its description.
-     * The arg argument specifies the specific keyword to match.
+     * The keyword argument specifies the specific keyword to match.
      *
-     * @param arg The keyword.
+     * @param keyword The keyword.
      * @return A list of tasks with matching keyword.
      */
-    public String findTasks(String arg) {
-        if (arg.isEmpty()) {
+    public String findTasks(String keyword) {
+        if (keyword.isEmpty()) {
             return "Whoops! Specify a keyword for me to find the tasks.";
         }
 
-        ArrayList<Task> matchingTasks = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.taskName.contains(arg)) {
-                matchingTasks.add(task);
-            }
-        }
-
-        if (matchingTasks.isEmpty()) {
-            return "There are no matching tasks in your list.";
-        } else {
-            int listSize = matchingTasks.size();
-            StringBuilder output = new StringBuilder();
-            output.append("There are ")
-                    .append(listSize)
-                    .append(" matching tasks in your list.");
-            for (int i = 0; i < listSize; i++) {
-                output.append("\n\t ")
-                        .append(i + 1)
-                        .append(". ")
-                        .append(matchingTasks.get(i).toString());
-            }
-            return output.toString();
-        }
+        ArrayList<Task> matchingTasks = searchTasksByKeyword(keyword);
+        return searchResultsMessage(matchingTasks).toString();
     }
 
     /**
@@ -186,14 +215,8 @@ public class TaskList {
      * @return A list of all current tasks.
      */
     public String listTasks() {
-        StringBuilder output = new StringBuilder("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            output.append("\n\t ")
-                    .append(i + 1)
-                    .append(". ")
-                    .append(tasks.get(i).toString());
-        }
-        return output.toString();
+        return buildTaskList(tasks, new StringBuilder("Here are the tasks in your list:"))
+                .toString();
     }
 
     /**
@@ -210,11 +233,8 @@ public class TaskList {
         }
 
         try {
-            int index = Parser.parseTaskIndex(arg, tasks.size());
-            Task task = tasks.get(index);
-            task.setCompleted();
-            storage.save(tasks);
-            return "Nice! I've marked this task as done:\n\t" + task.toString();
+            Task task = changeCompletionStatus(arg, true);
+            return buildTaskMarkedMessage(task, true);
         } catch (TaskException e) {
             return "Whoops! " + e.getMessage();
         }
@@ -234,11 +254,8 @@ public class TaskList {
         }
 
         try {
-            int index = Parser.parseTaskIndex(arg, tasks.size());
-            Task task = tasks.get(index);
-            task.unComplete();
-            storage.save(tasks);
-            return "OK, I've marked this task as not done yet:\n\t" + task.toString();
+            Task task = changeCompletionStatus(arg, false);
+            return buildTaskMarkedMessage(task, false);
         } catch (TaskException e) {
             return "Whoops! " + e.getMessage();
         }
@@ -258,21 +275,83 @@ public class TaskList {
         }
 
         try {
-            int size = tasks.size();
-            int index = Parser.parseTaskIndex(arg, size);
-            Task task = tasks.get(index);
-            tasks.remove(task);
-            storage.save(tasks);
-
-            size = tasks.size();
-            return new StringBuilder("Noted. I've deleted this task from your list:\n\t")
-                    .append(task.toString())
-                    .append("\n Now you have ")
-                    .append(size)
-                    .append(size == 1 ? "task remaining." : " tasks remaining.")
-                    .toString();
+            Task task = getTask(arg);
+            removeTask(task);
+            return taskDeleteMessage(task);
         } catch (TaskException e) {
             return "Whoops! " + e.getMessage();
         }
+    }
+
+    // Helper methods for task operations.
+    private ArrayList<Task> searchTasksByKeyword(String keyword) {
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.taskName.contains(keyword)) {
+                matchingTasks.add(task);
+            }
+        }
+        return matchingTasks;
+    }
+
+    private Task getTask(String arg) throws TaskException {
+        int index = Parser.parseTaskIndex(arg, tasks.size());
+        return tasks.get(index);
+    }
+
+    private Task changeCompletionStatus(String arg, boolean mark) throws TaskException {
+        Task task = getTask(arg);
+        if (mark) {
+            task.setCompleted();
+        } else {
+            task.unComplete();
+        }
+        storage.save(tasks);
+        return task;
+    }
+
+    private void removeTask(Task task) {
+        tasks.remove(task);
+        storage.save(tasks);
+    }
+
+    // Helper methods for message building
+    private StringBuilder searchResultsMessage(ArrayList<Task> matchingTasks) {
+        if (matchingTasks.isEmpty()) {
+            return new StringBuilder("There are no matching tasks in your list.");
+        }
+
+        StringBuilder output = new StringBuilder("There are ");
+        output.append(matchingTasks.size())
+                .append(" matching tasks in your list.");
+        return buildTaskList(matchingTasks, output);
+    }
+
+    private StringBuilder buildTaskList(ArrayList<Task> taskList, StringBuilder header) {
+        for (int i = 0; i < taskList.size(); i++) {
+            header.append("\n\t ")
+                    .append(i + 1)
+                    .append(". ")
+                    .append(taskList.get(i).toString());
+        }
+        return header;
+    }
+
+    private String buildTaskMarkedMessage(Task task, boolean mark) {
+        if (mark) {
+            return "Nice! I've marked this task as done:\n\t" + task.toString();
+        } else {
+            return "OK, I've marked this task as not done yet:\n\t" + task.toString();
+        }
+    }
+
+    private String taskDeleteMessage(Task task) {
+        int remainingTasks = tasks.size();
+        return new StringBuilder("Noted. I've deleted this task from your list:\n\t")
+                .append(task.toString())
+                .append("\n Now you have ")
+                .append(remainingTasks)
+                .append(remainingTasks == 1 ? " task remaining." : " tasks remaining.")
+                .toString();
     }
 }
