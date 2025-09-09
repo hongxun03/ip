@@ -1,7 +1,5 @@
 package chatbot;
 
-import java.util.Scanner;
-
 import chatbot.task.TaskList;
 
 /**
