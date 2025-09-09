@@ -63,6 +63,8 @@ public class Storage {
 
     private Task parseTask(String line) throws TaskException {
         String[] lineSplit = line.split(" \\| ");
+        assert lineSplit.length >= 3;
+
         String type = lineSplit[0];
         boolean isCompleted = !lineSplit[1].equals("X");
         String desc = lineSplit[2];
@@ -72,6 +74,8 @@ public class Storage {
         case "D" -> new Deadline(desc, Parser.parseDate(lineSplit[3]));
         case "E" -> {
             String[] dateSplit = lineSplit[3].split(" - ");
+            assert dateSplit.length == 2;
+
             yield new Event(desc,
                     LocalDateTime.parse(dateSplit[0]),
                     LocalDateTime.parse(dateSplit[1]));

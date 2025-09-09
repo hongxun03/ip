@@ -215,6 +215,8 @@ public class TaskList {
      * @return A list of all current tasks.
      */
     public String listTasks() {
+        // No assert statement for empty task list needed as it is alright for user to
+        // request a display of empty task list.
         return buildTaskList(tasks, new StringBuilder("Here are the tasks in your list:"))
                 .toString();
     }
@@ -295,8 +297,10 @@ public class TaskList {
     }
 
     private Task getTask(String arg) throws TaskException {
-        int index = Parser.parseTaskIndex(arg, tasks.size());
-        return tasks.get(index);
+        int index = Parser.parseTaskIndex(arg, tasks.size()); // index bounds checks handled in parserTaskIndex
+        Task task = tasks.get(index);
+        assert task != null;
+        return task;
     }
 
     private Task changeCompletionStatus(String arg, boolean mark) throws TaskException {
