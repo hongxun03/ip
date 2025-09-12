@@ -1,5 +1,6 @@
 package chatbot.task;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
@@ -73,6 +74,7 @@ public class TaskList {
         case "unmark" -> unMarkTask(arg);
         case "delete" -> deleteTask(arg);
         case "find" -> findTasks(arg);
+        case "free" -> isFree(arg);
         default -> handleTaskCreation(command);
         };
     }
@@ -121,7 +123,7 @@ public class TaskList {
         String dateString = parts[1];
 
         try {
-            return new Deadline(description, Parser.formatDate(dateString));
+            return new Deadline(description, Parser.formatDateTime(dateString));
         } catch (DateTimeParseException e) {
             return handleDateParseError();
         }
@@ -137,8 +139,8 @@ public class TaskList {
 
         try {
             return new Event(description,
-                    Parser.formatDate(startDateString),
-                    Parser.formatDate(endDateString));
+                    Parser.formatDateTime(startDateString),
+                    Parser.formatDateTime(endDateString));
         } catch (DateTimeParseException e) {
             return handleDateParseError();
         }
@@ -219,6 +221,83 @@ public class TaskList {
         // request a display of empty task list.
         return buildTaskList(tasks, new StringBuilder("Here are the tasks in your list:"))
                 .toString();
+    }
+
+    /**
+     * Returns whether user is free during the specified time
+     * The user can indicate a single date or a time period
+     *
+     * @return A string telling the user whether they are free during the time period
+     */
+    public String isFree(String arg) {
+        String[] split = arg.split(" - ");
+        if (split.length == 1) { // Only a single date
+            try {
+                return isDateFree(arg);
+            } catch (DateTimeParseException e) {
+                return "Enter a valid date, format: DD/MM";
+            }
+        } else { // A time period
+            return isTimePeriodFree(split[0], split[1]);
+        }
+    }
+
+    private String isDateFree(String arg) throws DateTimeParseException {
+        LocalDate checkDate = Parser.formatDate(arg);
+        ArrayList<Task> conflictingTasks = new ArrayList<>();
+
+        for (Task task : tasks) {
+            if (task instanceof Deadline) {
+                LocalDate taskDueDate = ((Deadline) task).dueDate.toLocalDate();
+
+                if (taskDueDate.isEqual(checkDate)) {
+                    conflictingTasks.add(task);
+                }
+
+            } else if (task instanceof Event) {
+                LocalDate taskStartDate = ((Event) task).fromDateTime.toLocalDate();
+                LocalDate taskEndDate = ((Event) task).dueDateTime.toLocalDate();
+
+                if (!checkDate.isBefore(taskStartDate) && !checkDate.isAfter(taskEndDate)) {
+                    conflictingTasks.add(task);
+                }
+            }
+        }
+        return printIsFree(conflictingTasks);
+    }
+
+    private String isTimePeriodFree(String start, String end) {
+        LocalDate startDate = Parser.formatDate(start);
+        LocalDate endDate = Parser.formatDate(end);
+        ArrayList<Task> conflictingTasks = new ArrayList<>();
+
+        for (Task task : tasks) {
+            if (task instanceof Deadline) {
+                LocalDate taskDueDate = ((Deadline) task).dueDate.toLocalDate();
+
+                if (taskDueDate.isAfter(startDate) && taskDueDate.isBefore(endDate)) {
+                    conflictingTasks.add(task);
+                }
+
+            } else if (task instanceof Event) {
+                LocalDate taskStartDate = ((Event) task).fromDateTime.toLocalDate();
+                LocalDate taskEndDate = ((Event) task).dueDateTime.toLocalDate();
+
+                if (!startDate.isAfter(taskEndDate) || !endDate.isBefore(taskStartDate)) {
+                    conflictingTasks.add(task);
+                }
+            }
+        }
+        return printIsFree(conflictingTasks);
+    }
+
+    private String printIsFree(ArrayList<Task> conflictingTasks) {
+        if (!conflictingTasks.isEmpty()) {
+            StringBuilder header = new StringBuilder("You are busy during this time.");
+            return buildTaskList(conflictingTasks, new StringBuilder(header)).toString();
+        }
+
+        return "You are free during this time.";
     }
 
     /**
