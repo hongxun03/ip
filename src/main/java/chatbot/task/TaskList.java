@@ -230,7 +230,7 @@ public class TaskList {
      * @return A string telling the user whether they are free during the time period
      */
     public String isFree(String arg) {
-        String[] split = arg.split(" - ");
+        String[] split = arg.split("-");
         if (split.length == 1) { // Only a single date
             try {
                 return isDateFree(arg);
@@ -238,7 +238,11 @@ public class TaskList {
                 return "Enter a valid date, format: DD/MM";
             }
         } else { // A time period
-            return isTimePeriodFree(split[0], split[1]);
+            try {
+                return isTimePeriodFree(split[0].trim(), split[1].trim());
+            } catch (DateTimeParseException e) {
+                return "Enter a valid date, format: DD/MM - DD/MM";
+            }
         }
     }
 
@@ -269,13 +273,20 @@ public class TaskList {
     private String isTimePeriodFree(String start, String end) {
         LocalDate startDate = Parser.formatDate(start);
         LocalDate endDate = Parser.formatDate(end);
+
+        if (startDate.isAfter(endDate)) {
+            return "Start date must be before end date.";
+        } else if (startDate.isEqual(endDate)) {
+            return isDateFree(start);
+        }
+
         ArrayList<Task> conflictingTasks = new ArrayList<>();
 
         for (Task task : tasks) {
             if (task instanceof Deadline) {
                 LocalDate taskDueDate = ((Deadline) task).dueDate.toLocalDate();
 
-                if (taskDueDate.isAfter(startDate) && taskDueDate.isBefore(endDate)) {
+                if (!taskDueDate.isBefore(startDate) && !taskDueDate.isAfter(endDate)) {
                     conflictingTasks.add(task);
                 }
 
@@ -283,7 +294,7 @@ public class TaskList {
                 LocalDate taskStartDate = ((Event) task).fromDateTime.toLocalDate();
                 LocalDate taskEndDate = ((Event) task).dueDateTime.toLocalDate();
 
-                if (!startDate.isAfter(taskEndDate) || !endDate.isBefore(taskStartDate)) {
+                if (!startDate.isAfter(taskEndDate) && !endDate.isBefore(taskStartDate)) {
                     conflictingTasks.add(task);
                 }
             }
