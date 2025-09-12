@@ -22,12 +22,12 @@ public class Parser {
 
     private static final DateTimeFormatter DATETIME_FORMAT = new DateTimeFormatterBuilder()
             .parseDefaulting(ChronoField.YEAR, LocalDate.now().getYear())
-            .appendPattern("dd/MM HHmm")
+            .appendPattern("d/M HHmm")
             .toFormatter();
 
     private static final DateTimeFormatter DATE_FORMAT = new DateTimeFormatterBuilder()
             .parseDefaulting(ChronoField.YEAR, LocalDate.now().getYear())
-            .appendPattern("dd/MM")
+            .appendPattern("d/M")
             .toFormatter();
 
     private static final DateTimeFormatter SAVE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
