@@ -12,27 +12,27 @@ public class ParserTest {
     @Test
     public void formatDate_correctFormat_noException() {
         Assertions.assertDoesNotThrow(() -> {
-            Parser.formatDate("13/05 1300");
+            Parser.formatDateTime("13/05 1300");
         });
     }
 
     @Test
     public void formatDate_wrongFormat_exceptionThrown() {
         Assertions.assertThrows(DateTimeParseException.class, () -> {
-            Parser.formatDate("abc");
+            Parser.formatDateTime("abc");
         });
     }
 
     @Test
     public void formatDate_outOfBounds_exceptionThrown() {
         Assertions.assertThrows(DateTimeParseException.class, () -> {
-            Parser.formatDate("50/03 1500");
+            Parser.formatDateTime("50/03 1500");
         });
         Assertions.assertThrows(DateTimeParseException.class, () -> {
-            Parser.formatDate("15/13 1500");
+            Parser.formatDateTime("15/13 1500");
         });
         Assertions.assertThrows(DateTimeParseException.class, () -> {
-            Parser.formatDate("05/20 2500");
+            Parser.formatDateTime("05/20 2500");
         });
     }
 

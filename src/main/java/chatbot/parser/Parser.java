@@ -20,9 +20,14 @@ import chatbot.task.TaskException;
  */
 public class Parser {
 
+    private static final DateTimeFormatter DATETIME_FORMAT = new DateTimeFormatterBuilder()
+            .parseDefaulting(ChronoField.YEAR, LocalDate.now().getYear())
+            .appendPattern("d/M HHmm")
+            .toFormatter();
+
     private static final DateTimeFormatter DATE_FORMAT = new DateTimeFormatterBuilder()
             .parseDefaulting(ChronoField.YEAR, LocalDate.now().getYear())
-            .appendPattern("dd/MM HHmm")
+            .appendPattern("d/M")
             .toFormatter();
 
     private static final DateTimeFormatter SAVE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -36,8 +41,12 @@ public class Parser {
      * @return The <code>LocalDateTime</code> of the specified date.
      * @throws DateTimeParseException If date is of an incorrect format.
      */
-    public static LocalDateTime formatDate(String date) throws DateTimeParseException {
-        return LocalDateTime.parse(date, DATE_FORMAT);
+    public static LocalDateTime formatDateTime(String date) throws DateTimeParseException {
+        return LocalDateTime.parse(date, DATETIME_FORMAT);
+    }
+
+    public static LocalDate formatDate(String date) throws DateTimeParseException {
+        return LocalDate.parse(date, DATE_FORMAT);
     }
 
     /**
