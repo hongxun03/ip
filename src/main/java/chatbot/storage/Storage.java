@@ -91,7 +91,7 @@ public class Storage {
     }
 
     /**
-     * Create a storage file if it doesn't already exist.
+     * Creates a storage file if it doesn't already exist.
      *
      * @param file The specified file to create.
      */
