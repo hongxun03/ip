@@ -3,6 +3,7 @@ package chatbot.task;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 import chatbot.parser.Parser;
 import chatbot.storage.Storage;
@@ -223,6 +224,11 @@ public class TaskList {
                 .toString();
     }
 
+    /* The methods below to check whether a time period is free were sourced from ChatGPT
+       where it was prompted to help improve SLAP and DRY to improve code quality,
+       as the code previously was repetitive and had multiple layers of abstraction.
+     */
+
     /**
      * Returns whether user is free during the specified time
      * The user can indicate a single date or a time period
@@ -231,81 +237,51 @@ public class TaskList {
      */
     public String isFree(String arg) {
         String[] split = arg.split("-");
-        if (split.length == 1) { // Only a single date
-            try {
-                return isDateFree(arg);
-            } catch (DateTimeParseException e) {
-                return "Enter a valid date, format: DD/MM";
+        try {
+            if (split.length == 1) {
+                LocalDate date = Parser.formatDate(arg.trim());
+                return checkFreeOnSingleDate(date);
+            } else {
+                LocalDate start = Parser.formatDate(split[0].trim());
+                LocalDate end = Parser.formatDate(split[1].trim());
+                return checkFreeInPeriod(start, end);
             }
-        } else { // A time period
-            try {
-                return isTimePeriodFree(split[0].trim(), split[1].trim());
-            } catch (DateTimeParseException e) {
-                return "Enter a valid date, format: DD/MM - DD/MM";
-            }
+        } catch (DateTimeParseException e) {
+            return "Enter a valid date, format: DD/MM or DD/MM - DD/MM";
         }
     }
 
-    private String isDateFree(String arg) throws DateTimeParseException {
-        LocalDate checkDate = Parser.formatDate(arg);
-        ArrayList<Task> conflictingTasks = new ArrayList<>();
-
-        for (Task task : tasks) {
-            if (task instanceof Deadline) {
-                LocalDate taskDueDate = ((Deadline) task).dueDate.toLocalDate();
-
-                if (taskDueDate.isEqual(checkDate)) {
-                    conflictingTasks.add(task);
-                }
-
-            } else if (task instanceof Event) {
-                LocalDate taskStartDate = ((Event) task).fromDateTime.toLocalDate();
-                LocalDate taskEndDate = ((Event) task).dueDateTime.toLocalDate();
-
-                if (!checkDate.isBefore(taskStartDate) && !checkDate.isAfter(taskEndDate)) {
-                    conflictingTasks.add(task);
-                }
-            }
-        }
-        return printIsFree(conflictingTasks);
+    private String checkFreeOnSingleDate(LocalDate date) {
+        ArrayList<Task> conflictingTasks = getConflictingTasks(t -> t.conflictsWith(date));
+        return buildFreeMessage(conflictingTasks);
     }
 
-    private String isTimePeriodFree(String start, String end) {
-        LocalDate startDate = Parser.formatDate(start);
-        LocalDate endDate = Parser.formatDate(end);
-
-        if (startDate.isAfter(endDate)) {
+    private String checkFreeInPeriod(LocalDate start, LocalDate end) {
+        if (start.isAfter(end)) {
             return "Start date must be before end date.";
-        } else if (startDate.isEqual(endDate)) {
-            return isDateFree(start);
         }
-
-        ArrayList<Task> conflictingTasks = new ArrayList<>();
-
-        for (Task task : tasks) {
-            if (task instanceof Deadline) {
-                LocalDate taskDueDate = ((Deadline) task).dueDate.toLocalDate();
-
-                if (!taskDueDate.isBefore(startDate) && !taskDueDate.isAfter(endDate)) {
-                    conflictingTasks.add(task);
-                }
-
-            } else if (task instanceof Event) {
-                LocalDate taskStartDate = ((Event) task).fromDateTime.toLocalDate();
-                LocalDate taskEndDate = ((Event) task).dueDateTime.toLocalDate();
-
-                if (!startDate.isAfter(taskEndDate) && !endDate.isBefore(taskStartDate)) {
-                    conflictingTasks.add(task);
-                }
-            }
+        if (start.isEqual(end)) {
+            return checkFreeOnSingleDate(start);
         }
-        return printIsFree(conflictingTasks);
+        ArrayList<Task> conflictingTasks = getConflictingTasks(t -> t.conflictsWithin(start, end));
+        return buildFreeMessage(conflictingTasks);
     }
 
-    private String printIsFree(ArrayList<Task> conflictingTasks) {
+    private ArrayList<Task> getConflictingTasks(Predicate<Task> condition) {
+        ArrayList<Task> conflictingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (condition.test(task)) {
+                conflictingTasks.add(task);
+            }
+        }
+        return conflictingTasks;
+    }
+
+    private String buildFreeMessage(ArrayList<Task> conflictingTasks) {
         if (!conflictingTasks.isEmpty()) {
-            StringBuilder header = new StringBuilder("You are busy during this time.");
-            return buildTaskList(conflictingTasks, new StringBuilder(header)).toString();
+            return buildTaskList(conflictingTasks,
+                    new StringBuilder("You are busy during this time.")
+            ).toString();
         }
 
         return "You are free during this time.";

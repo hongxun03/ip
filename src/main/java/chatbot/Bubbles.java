@@ -31,8 +31,8 @@ public class Bubbles {
     /**
      * Runs the chatbot.
      */
-    public void run() {
-        ui.start();
+    public String run() {
+        return ui.start();
     }
 
     public String getResponse(String input) {
@@ -42,7 +42,4 @@ public class Bubbles {
         return tasks.op(input);
     }
 
-    public static void main(String[] args) {
-        new Bubbles("./data/Bubbles.txt").run();
-    }
 }

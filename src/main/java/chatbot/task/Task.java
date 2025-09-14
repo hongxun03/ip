@@ -1,5 +1,7 @@
 package chatbot.task;
 
+import java.time.LocalDate;
+
 /**
  * The <code>Task</code> class defines the implementation and methods of its subclasses.
  *
@@ -34,6 +36,17 @@ public abstract class Task {
     }
 
     public abstract String saveString();
+
+    // ChatGPT helped me improve polymorphism by encouraging me to move time conflict logic
+    // checks into Task subclasses instead.
+    // In particular, tasks that don't override this method won't conflict with the queried time.
+    public boolean conflictsWith(LocalDate date) {
+        return false;
+    }
+
+    public boolean conflictsWithin(LocalDate start, LocalDate end) {
+        return false;
+    }
 
     /**
      * Returns the <code>Task</code> as a formatted string displaying the description and completion status.

@@ -47,6 +47,18 @@ public class Deadline extends Task {
                 + " | " + this.taskName + " | " + this.dueDate;
     }
 
+
+    @Override
+    public boolean conflictsWith(LocalDate date) {
+        return dueDate.toLocalDate().isEqual(date);
+    }
+
+    @Override
+    public boolean conflictsWithin(LocalDate start, LocalDate end) {
+        LocalDate due = dueDate.toLocalDate();
+        return !due.isBefore(start) && !due.isAfter(end);
+    }
+
     @Override
     public String toString() {
         LocalDate today = LocalDate.now(ZoneId.of("Asia/Singapore"));

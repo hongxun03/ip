@@ -35,6 +35,11 @@ public class MainWindow extends AnchorPane {
     /** Injects the Duke instance */
     public void setDuke(Bubbles b) {
         bubbles = b;
+
+        // I asked ChatGPT on how to show the welcome message cleanly
+        dialogContainer.getChildren().add(
+                DialogBox.getDukeDialog(bubbles.run(), dukeImage)
+        );
     }
 
     /**

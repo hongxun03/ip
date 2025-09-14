@@ -1,5 +1,6 @@
 package chatbot.task;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -35,6 +36,20 @@ public class Event extends Task {
         return "E | " + (this.isCompleted ? "✓" : "X")
                 + " | " + this.taskName
                 + " | " + this.fromDateTime + " - " + this.dueDateTime;
+    }
+
+    @Override
+    public boolean conflictsWith(LocalDate date) {
+        LocalDate from = fromDateTime.toLocalDate();
+        LocalDate to = dueDateTime.toLocalDate();
+        return !date.isBefore(from) && !date.isAfter(to);
+    }
+
+    @Override
+    public boolean conflictsWithin(LocalDate start, LocalDate end) {
+        LocalDate from = fromDateTime.toLocalDate();
+        LocalDate to = dueDateTime.toLocalDate();
+        return !start.isAfter(to) && !end.isBefore(from);
     }
 
     @Override
