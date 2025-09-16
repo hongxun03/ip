@@ -5,6 +5,8 @@
 
 .text-field {
     -fx-background-color: #d9ffe2;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
     -fx-font: 20px "Arial";
 }
 
@@ -15,17 +17,11 @@
 
 .button {
     -fx-background-color: mediumspringgreen;
-    -fx-font: italic bold 16px "Arial";
+    -fx-font: bold 16px "Arial";
 }
 
 .button:hover {
     -fx-background-color:cyan;
-    -fx-font-size: 18px;
-}
-
-.button:pressed {
-    -fx-background-color:orange;
-    -fx-font-size: 20px;
 }
 
 .scroll-pane,
