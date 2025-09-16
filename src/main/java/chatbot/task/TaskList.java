@@ -1,6 +1,7 @@
 package chatbot.task;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.function.Predicate;
@@ -139,9 +140,14 @@ public class TaskList {
         String endDateString = parts[2].trim();
 
         try {
-            return new Event(description,
-                    Parser.formatDateTime(startDateString),
-                    Parser.formatDateTime(endDateString));
+            LocalDateTime start = Parser.formatDateTime(startDateString);
+            LocalDateTime end = Parser.formatDateTime(endDateString);
+
+            if (!start.isBefore(end)) {
+                throw new TaskException("Starting date/time must be before ending date/time.");
+            }
+
+            return new Event(description, start, end);
         } catch (DateTimeParseException e) {
             return handleDateParseError();
         }
