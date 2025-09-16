@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.time.temporal.ChronoField;
 
 import chatbot.task.TaskException;
@@ -23,12 +24,14 @@ public class Parser {
     private static final DateTimeFormatter DATETIME_FORMAT = new DateTimeFormatterBuilder()
             .parseDefaulting(ChronoField.YEAR, LocalDate.now().getYear())
             .appendPattern("d/M HHmm")
-            .toFormatter();
+            .toFormatter()
+            .withResolverStyle(ResolverStyle.STRICT); // Without this, Java adjusts invalid dates to nearest valid one.
 
     private static final DateTimeFormatter DATE_FORMAT = new DateTimeFormatterBuilder()
             .parseDefaulting(ChronoField.YEAR, LocalDate.now().getYear())
             .appendPattern("d/M")
-            .toFormatter();
+            .toFormatter()
+            .withResolverStyle(ResolverStyle.STRICT); // Without this, Java adjusts invalid dates to nearest valid one.
 
     private static final DateTimeFormatter SAVE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
