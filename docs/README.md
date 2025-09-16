@@ -7,7 +7,7 @@ Introducing Bubbles, your personal chatbot that will **blow** you away. It is
 - ~~relatively~~ easy to learn
 - poppable 🫧
 
-![Screenshot of a sample usage of the product](docs/Ui.png)
+![Screenshot of a sample usage of the product](Ui.png)
 
 ## How can I start blowing bubbles?
 It's easy!
