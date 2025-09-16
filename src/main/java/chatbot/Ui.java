@@ -19,7 +19,7 @@ public class Ui {
      * Introduces chatbot and lists out tasks stored.
      */
     public String start() {
-        return "Hello! I'm " + NAME + "!\n" + tasks.listTasks() + "\nWhat can I do for you?";
+        return "Boop! I'm " + NAME + "!\n" + tasks.listTasks() + "\nWhat can I do for you?";
     }
 
     /**
