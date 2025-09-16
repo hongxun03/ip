@@ -49,14 +49,16 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
-        String response = bubbles.getResponse(input);
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getBubblesDialog(response, bubblesImage)
-        );
+        if (!input.isEmpty()) {
+            String response = bubbles.getResponse(input);
+            dialogContainer.getChildren().addAll(
+                    DialogBox.getUserDialog(input, userImage),
+                    DialogBox.getBubblesDialog(response, bubblesImage)
+            );
 
-        if (input.equalsIgnoreCase("bye")) {
-            Platform.exit();
+            if (input.equalsIgnoreCase("bye")) {
+                Platform.exit();
+            }
         }
 
         userInput.clear();
