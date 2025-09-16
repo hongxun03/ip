@@ -46,7 +46,7 @@ public class TaskList {
 
         public Command(String name, String argument) {
             this.name = name;
-            this.argument = argument;
+            this.argument = argument.trim();
         }
 
         public String getName() {
@@ -60,7 +60,7 @@ public class TaskList {
 
     // Helper methods for Command operations.
     private Command parseCommand(String message) {
-        String[] parts = message.split(" ", 2);
+        String[] parts = message.trim().split(" ", 2);
         String commandName = parts[0];
         String argument = (parts.length > 1) ? parts[1] : "";
         return new Command(commandName, argument);
@@ -120,8 +120,8 @@ public class TaskList {
         validateNotEmpty(arg, "Enter the description of the deadline.");
 
         String[] parts = parseDeadlineArguments(arg);
-        String description = parts[0];
-        String dateString = parts[1];
+        String description = parts[0].trim();
+        String dateString = parts[1].trim();
 
         try {
             return new Deadline(description, Parser.formatDateTime(dateString));
@@ -134,9 +134,9 @@ public class TaskList {
         validateNotEmpty(arg, "Enter the description of the event.");
 
         String[] parts = parseEventArguments(arg);
-        String description = parts[0];
-        String startDateString = parts[1];
-        String endDateString = parts[2];
+        String description = parts[0].trim();
+        String startDateString = parts[1].trim();
+        String endDateString = parts[2].trim();
 
         try {
             return new Event(description,
