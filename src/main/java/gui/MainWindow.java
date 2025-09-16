@@ -25,25 +25,25 @@ public class MainWindow extends AnchorPane {
     private Bubbles bubbles;
 
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/User.png"));
-    private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/Bubbles.png"));
+    private Image bubblesImage = new Image(this.getClass().getResourceAsStream("/images/Bubbles.png"));
 
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    /** Injects the Duke instance */
-    public void setDuke(Bubbles b) {
+    /** Injects the Bubbles instance */
+    public void setBubbles(Bubbles b) {
         bubbles = b;
 
         // I asked ChatGPT on how to show the welcome message cleanly
         dialogContainer.getChildren().add(
-                DialogBox.getDukeDialog(bubbles.run(), dukeImage)
+                DialogBox.getBubblesDialog(bubbles.run(), bubblesImage)
         );
     }
 
     /**
-     * Creates two dialog boxes, one echoing user input and the other containing Duke's reply and then appends them to
+     * Creates two dialog boxes, one echoing user input and the other containing bubbles' reply and then appends them to
      * the dialog container. Clears the user input after processing.
      */
     @FXML
@@ -52,7 +52,7 @@ public class MainWindow extends AnchorPane {
         String response = bubbles.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDukeDialog(response, dukeImage)
+                DialogBox.getBubblesDialog(response, bubblesImage)
         );
 
         if (input.equalsIgnoreCase("bye")) {

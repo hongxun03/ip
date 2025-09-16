@@ -27,7 +27,7 @@ public class Main extends Application {
             stage.setMinHeight(220);
             stage.setMinWidth(417);
             stage.setMaxWidth(800);
-            fxmlLoader.<MainWindow>getController().setDuke(bubbles); // inject the Bubbles instance
+            fxmlLoader.<MainWindow>getController().setBubbles(bubbles); // inject the Bubbles instance
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
